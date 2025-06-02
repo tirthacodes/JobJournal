@@ -1,4 +1,14 @@
+using JobJournal.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+//Passing DbContext Confiuring String
+builder.Services.AddDbContext<AppDbContnext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
+
+
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
