@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JobJournal.Data
 {
-    public class AppDbContnext : DbContext
+    public class AppDbContext : DbContext
     {
-        public AppDbContnext(DbContextOptions<AppDbContnext> options) : base(options) { }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
 
         public DbSet<User> Users { get; set; }

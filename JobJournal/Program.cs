@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 //Passing DbContext Confiuring String
-builder.Services.AddDbContext<AppDbContnext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
 
 
 
@@ -35,3 +35,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+AppDbInitializer.Seed(app);
