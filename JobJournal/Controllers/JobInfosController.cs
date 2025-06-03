@@ -1,4 +1,5 @@
 ﻿using JobJournal.Data;
+using JobJournal.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +22,37 @@ namespace JobJournal.Controllers
         }
 
 
-        
+
+
+
+
+        //For creating JobInfo
+        // GET
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST
+        [HttpPost]
+        public async Task<IActionResult> Create(JobInfo jobInfo)
+        {
+            if (ModelState.IsValid)
+            {
+                // hardcoding atm, later will be from logged in user
+                jobInfo.userId = 1;
+                jobInfo.appliedTime = DateTime.Now;
+
+                _context.JobInfos.Add(jobInfo);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(jobInfo);
+        }
+
+
+
+
     }
 }
