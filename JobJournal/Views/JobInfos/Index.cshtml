@@ -1,0 +1,35 @@
+﻿@*Defining model*@
+@model IEnumerable<JobInfo>
+
+
+@*Defining ViewData*@
+@{
+    ViewData["Title"] = "Job Infos";
+}
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>Company Name</td>
+            <td>Role</td>
+            <td>Job Summary</td>
+            <td>Status</td>
+            <td>Applied via</td>
+            <td>Applied Time</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var job in Model)
+        {
+            <tr>
+                <td>@job.companyName</td>
+                <td>@job.role</td>
+                <td>@job.jobSummary</td>
+                <td>@job.applicationStatus</td>
+                <td>@job.appliedVia</td>
+                <td>@job.appliedTime.ToString("yyyy-MM-dd")</td>
+            </tr>
+        }
+    </tbody>
+</table>

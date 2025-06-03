@@ -42,6 +42,7 @@ namespace JobJournal.Data
                             applicationStatus = ApplicationStatus.Applied,
                             appliedVia = AppliedVia.Email,
                             appliedTime = DateTime.Now,
+                            notes = "super hopeful!",
                             userId = userId,
                         },
 
@@ -53,6 +54,7 @@ namespace JobJournal.Data
                             applicationStatus = ApplicationStatus.InterviewScheduled,
                             appliedVia = AppliedVia.CompanyWebsite,
                             appliedTime = DateTime.Now.AddDays(-5),
+                            notes = "preparing the best",
                             userId = userId,
                         }
                         ) ; 
