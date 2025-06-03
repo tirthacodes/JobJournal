@@ -1,4 +1,5 @@
 ﻿using JobJournal.Data.Enums;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace JobJournal.Models
 {
@@ -17,6 +18,8 @@ namespace JobJournal.Models
         public DateTime appliedTime { get; set; }
 
         public int userId { get; set; }
+
+        [ValidateNever]
         public User user { get; set; }
     }
 }

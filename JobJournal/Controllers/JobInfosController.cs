@@ -33,23 +33,34 @@ namespace JobJournal.Controllers
             return View();
         }
 
-        // POST
         [HttpPost]
         public async Task<IActionResult> Create(JobInfo jobInfo)
         {
-            if (ModelState.IsValid)
-            {
-                // hardcoding atm, later will be from logged in user
-                jobInfo.userId = 1;
-                jobInfo.appliedTime = DateTime.Now;
 
-                _context.JobInfos.Add(jobInfo);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+            if (!ModelState.IsValid)
+            {
+                // Show all validation errors in console
+                foreach (var entry in ModelState)
+                {
+                    var key = entry.Key;
+                    var errors = entry.Value.Errors;
+                    foreach (var error in errors)
+                    {
+                        Console.WriteLine($"Error in {key}: {error.ErrorMessage}");
+                    }
+                }
+
+                return View(jobInfo);
             }
 
-            return View(jobInfo);
+            jobInfo.userId = 1;
+            jobInfo.appliedTime = DateTime.Now;
+
+            _context.JobInfos.Add(jobInfo);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
+
 
 
 

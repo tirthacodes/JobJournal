@@ -1,0 +1,36 @@
+﻿@using JobJournal.Data.Enums
+@model JobInfo
+
+@{
+    ViewData["Title"] = "Create Job Info";
+}
+
+<h2>Create Job Info</h2>
+
+<form asp-action="Create">
+    <div>
+        <label>Company Name</label>
+        <input asp-for="companyName" class="form-control" />
+    </div>
+    <div>
+        <label>Role</label>
+        <input asp-for="role" class="form-control" />
+    </div>
+    <div>
+        <label>Job Summary</label>
+        <textarea asp-for="jobSummary" class="form-control"></textarea>
+    </div>
+    <div>
+        <label>Status</label>
+        <select asp-for="applicationStatus" asp-items="Html.GetEnumSelectList<ApplicationStatus>()" class="form-control"></select>
+    </div>
+    <div>
+        <label>Applied Via</label>
+        <select asp-for="appliedVia" asp-items="Html.GetEnumSelectList<AppliedVia>()" class="form-control"></select>
+    </div>
+    <div>
+        <label>Notes</label>
+        <textarea asp-for="notes" class="form-control"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Submit</button>
+</form>
