@@ -17,6 +17,7 @@
             <td>Status</td>
             <td>Applied via</td>
             <td>Applied Time</td>
+            <td>Action</td>
         </tr>
     </thead>
     <tbody>
@@ -29,6 +30,9 @@
                 <td>@job.applicationStatus</td>
                 <td>@job.appliedVia</td>
                 <td>@job.appliedTime.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@job.id" class="btn btn-sm btn-outline-primary">Edit</a>
+                </td>
             </tr>
         }
     </tbody>
@@ -36,5 +40,5 @@
 
 
 <div class="text-white d-flex justify-content-end">
-    <a asp-controller="JobInfos" asp-action="Create" class="btn btn-success"> <i class="bi bi-plus-circle"></i> Add New Application</a>
+    <a asp-controller="JobInfos" asp-action="Create" class="btn btn-outline-success"> <i class="bi bi-plus-circle"></i> Add New Application</a>
 </div>
