@@ -39,17 +39,6 @@ namespace JobJournal.Controllers
 
             if (!ModelState.IsValid)
             {
-                // Show all validation errors in console
-                foreach (var entry in ModelState)
-                {
-                    var key = entry.Key;
-                    var errors = entry.Value.Errors;
-                    foreach (var error in errors)
-                    {
-                        Console.WriteLine($"Error in {key}: {error.ErrorMessage}");
-                    }
-                }
-
                 return View(jobInfo);
             }
 
@@ -63,6 +52,51 @@ namespace JobJournal.Controllers
 
 
 
+
+        //Get Edit request
+        public async Task<IActionResult> Edit(int id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var jobInfo = await _context.JobInfos.FindAsync(id);
+            if(jobInfo == null)
+            {
+                return NotFound();
+            }
+
+            return View(jobInfo);
+        }
+
+
+        // POST: JobInfos/Edit/1
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, JobInfo jobInfo)
+        {
+            if (id != jobInfo.id)
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return View(jobInfo);
+
+            try
+            {
+                _context.Update(jobInfo);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.JobInfos.Any(e => e.id == id))
+                    return NotFound();
+                else
+                    throw;
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
 
 
     }
