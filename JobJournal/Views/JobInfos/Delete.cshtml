@@ -1,0 +1,45 @@
+﻿@using JobJournal.Data.Enums
+@model JobInfo
+
+@{
+    ViewData["Title"] = "Delete Job Application";
+}
+
+
+<h4>Are you sure you want to delete this job application?</h4>
+
+<div class="form-group">
+    <label asp-for="companyName"></label>
+    <input asp-for="companyName" class="form-control" readonly/>
+</div>
+
+<div class="form-group">
+    <label asp-for="role"></label>
+    <input asp-for="role" class="form-control" readonly/>
+</div>
+
+<div class="form-group">
+    <label asp-for="jobSummary"></label>
+    <textarea asp-for="jobSummary" class="form-control" readonly></textarea>
+</div>
+
+<div class="form-group">
+    <label asp-for="applicationStatus"></label>
+    <select asp-for="applicationStatus" asp-items="Html.GetEnumSelectList<ApplicationStatus>()" class="form-control" disabled></select>
+</div>
+
+<div class="form-group">
+    <label asp-for="appliedVia"></label>
+    <select asp-for="appliedVia" asp-items="Html.GetEnumSelectList<AppliedVia>()" class="form-control" disabled></select>
+</div>
+
+<div class="form-group">
+    <label asp-for="notes"></label>
+    <textarea asp-for="notes" class="form-control" readonly></textarea>
+</div>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="id" />
+    <button type="submit" class="btn btn-danger"readonly>Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

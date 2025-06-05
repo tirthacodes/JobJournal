@@ -99,5 +99,36 @@ namespace JobJournal.Controllers
         }
 
 
+
+        //Get Delete request
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var jobInfo = await _context.JobInfos.FindAsync(id);
+            if (jobInfo == null)
+            {
+                return NotFound();
+            }
+
+            return View(jobInfo);
+        }
+
+        //Post Delete
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var jobInfo = await _context.JobInfos.FindAsync(id);
+            if (jobInfo != null)
+            {
+                _context.JobInfos.Remove(jobInfo);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
