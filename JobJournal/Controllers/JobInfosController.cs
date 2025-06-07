@@ -1,23 +1,33 @@
 ﻿using JobJournal.Data;
 using JobJournal.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace JobJournal.Controllers
 {
+    [Authorize]
     public class JobInfosController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public JobInfosController(AppDbContext context)
+
+        public JobInfosController(AppDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
 
         public async Task<IActionResult> Index()
         {
-            var jobs = await _context.JobInfos.Include(j => j.user).ToListAsync();
+            var userId = _userManager.GetUserId(User);
+            var jobs = await _context.JobInfos
+                .Where(j => j.userId == userId)
+                .Include(j => j.User)
+                .ToListAsync();
             return View(jobs);
         }
 
@@ -42,7 +52,7 @@ namespace JobJournal.Controllers
                 return View(jobInfo);
             }
 
-            jobInfo.userId = 1;
+            jobInfo.userId = _userManager.GetUserId(User);
             jobInfo.appliedTime = DateTime.Now;
 
             _context.JobInfos.Add(jobInfo);

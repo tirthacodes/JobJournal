@@ -43,7 +43,7 @@ namespace JobJournal.Data
                             appliedVia = AppliedVia.Email,
                             appliedTime = DateTime.Now,
                             notes = "super hopeful!",
-                            userId = userId,
+                            userId = userId.ToString(),
                         },
 
                         new JobInfo
@@ -55,7 +55,7 @@ namespace JobJournal.Data
                             appliedVia = AppliedVia.CompanyWebsite,
                             appliedTime = DateTime.Now.AddDays(-5),
                             notes = "preparing the best",
-                            userId = userId,
+                            userId = userId.ToString(),
                         }
                         ) ; 
                     context.SaveChanges() ;

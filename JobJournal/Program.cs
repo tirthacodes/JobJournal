@@ -1,17 +1,36 @@
 using JobJournal.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using JobJournal.Areas.Identity.Data;
+using JobJournal.Data.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 
 //Passing DbContext Confiuring String
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
 
 
+//adding services for auth
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false;
+})
+.AddEntityFrameworkStores<AppDbContext>()
+.AddDefaultTokenProviders();
 
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//this added for razor views
+builder.Services.AddRazorPages();
+
+builder.Services.AddSingleton<IEmailSender, DummyEmailSender>();
+
 
 var app = builder.Build();
 
@@ -28,13 +47,23 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+//added
+app.UseAuthentication();
+
+
 app.UseAuthorization();
+
+
+//for identity pages
+app.MapRazorPages(); // 
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 AppDbInitializer.Seed(app);
+
+
 
 app.Run();
 
