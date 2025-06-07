@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JobJournal.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : DbContext, IdentityDbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
