@@ -26,7 +26,7 @@ namespace JobJournal.Controllers
             var userId = _userManager.GetUserId(User);
             var jobs = await _context.JobInfos
                 .Where(j => j.userId == userId)
-                .Include(j => j.User)
+                .Include(j => j.user)
                 .ToListAsync();
             return View(jobs);
         }
@@ -49,6 +49,17 @@ namespace JobJournal.Controllers
 
             if (!ModelState.IsValid)
             {
+                foreach (var state in ModelState)
+                {
+                    if (state.Value.Errors.Any())
+                    {
+                        Console.WriteLine($"Error in {state.Key}:");
+                        foreach (var error in state.Value.Errors)
+                        {
+                            Console.WriteLine($"- {error.ErrorMessage}");
+                        }
+                    }
+                }
                 return View(jobInfo);
             }
 
