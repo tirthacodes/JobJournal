@@ -13,12 +13,12 @@ namespace JobJournal.Models
         public int id { get; set; }
 
         [Required]
-        [StringLength(maximumLength: 200)]
+        [StringLength(maximumLength: 40)]
         [Display(Name ="Company Name")]
         public string companyName { get; set; }
 
         [Required]
-        [StringLength(maximumLength: 200)]
+        [StringLength(maximumLength: 40)]
         [Display(Name ="Job Title")]
         public string role { get; set; }
 

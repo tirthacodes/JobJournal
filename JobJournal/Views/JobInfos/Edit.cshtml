@@ -16,31 +16,37 @@
     <div class="form-group">
         <label asp-for="companyName"></label>
         <input asp-for="companyName" class="form-control" />
+        <span asp-validation-for="companyName" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="role"></label>
         <input asp-for="role" class="form-control" />
+        <span asp-validation-for="role" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="jobSummary"></label>
         <textarea asp-for="jobSummary" class="form-control"></textarea>
+        <span asp-validation-for="jobSummary" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="applicationStatus"></label>
         <select asp-for="applicationStatus" asp-items="Html.GetEnumSelectList<ApplicationStatus>()" class="form-control"></select>
+        <span asp-validation-for="applicationStatus" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="appliedVia"></label>
         <select asp-for="appliedVia" asp-items="Html.GetEnumSelectList<AppliedVia>()" class="form-control"></select>
+        <span asp-validation-for="appliedVia" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="notes"></label>
         <textarea asp-for="notes" class="form-control"></textarea>
+        <span asp-validation-for="notes" class="text-danger"></span>
     </div>
 
     <button type="submit" class="btn btn-primary">Save Changes</button>
