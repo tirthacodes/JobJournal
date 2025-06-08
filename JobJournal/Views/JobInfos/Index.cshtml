@@ -1,4 +1,5 @@
-﻿@*Defining model*@
+﻿@using JobJournal.Data.Enums
+@*Defining model*@
 @model IEnumerable<JobInfo>
 
 
@@ -6,6 +7,24 @@
 @{
     ViewData["Title"] = "Job Infos";
 }
+
+
+<form asp-controller="JobInfos" asp-action="Index" method="get">
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <input type="text" name="searchTerm" class="form-control" placeholder="Search Company or Role..." value="@ViewData["CurrentFilter"]"/>
+        </div>
+        <div class="col-md-3">
+            <select name="statusFilter" asp-items="Html.GetEnumSelectList<ApplicationStatus>()" class="form-control">
+                <option value="">All Status</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
+        </div>
+    </div>
+</form>
 
 
 <table class="table">

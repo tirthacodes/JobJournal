@@ -1,4 +1,5 @@
 ﻿using JobJournal.Data;
+using JobJournal.Data.Enums;
 using JobJournal.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -21,13 +22,27 @@ namespace JobJournal.Controllers
         }
 
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm, ApplicationStatus? statusFilter)
         {
             var userId = _userManager.GetUserId(User);
-            var jobs = await _context.JobInfos
+            var jobsQuery = _context.JobInfos
                 .Where(j => j.userId == userId)
-                .Include(j => j.user)
-                .ToListAsync();
+                .Include(j => j.user) 
+                .AsQueryable(); 
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                jobsQuery = jobsQuery.Where(j => j.companyName.Contains(searchTerm) || j.role.Contains(searchTerm) || j.jobSummary.Contains(searchTerm));
+                ViewData["CurrentFilter"] = searchTerm; // keeping search term in textbox after refresh
+            }
+
+            if (statusFilter.HasValue && statusFilter.Value != 0) 
+            {
+                jobsQuery = jobsQuery.Where(j => j.applicationStatus == statusFilter.Value);
+                ViewData["CurrentStatusFilter"] = statusFilter.Value;
+            }
+
+            var jobs = await jobsQuery.ToListAsync();
             return View(jobs);
         }
 
