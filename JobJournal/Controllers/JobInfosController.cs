@@ -64,7 +64,6 @@ namespace JobJournal.Controllers
             }
 
             jobInfo.userId = _userManager.GetUserId(User);
-            jobInfo.appliedTime = DateTime.Now;
 
             _context.JobInfos.Add(jobInfo);
             await _context.SaveChangesAsync();

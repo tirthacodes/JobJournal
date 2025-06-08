@@ -44,6 +44,12 @@
     </div>
 
     <div class="form-group">
+        <label>Applied Time</label>
+        <input asp-for="appliedTime" type="date" class="form-control" />
+        <span asp-validation-for="appliedTime" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
         <label asp-for="notes"></label>
         <textarea asp-for="notes" class="form-control"></textarea>
         <span asp-validation-for="notes" class="text-danger"></span>
