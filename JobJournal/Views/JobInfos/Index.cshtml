@@ -46,7 +46,11 @@
                 <td>@job.companyName</td>
                 <td>@job.role</td>
                 <td>@job.jobSummary</td>
-                <td>@job.applicationStatus</td>
+                <td>
+                    <span class="status-@job.applicationStatus.ToString() px-2 py-1 rounded">
+                        @job.applicationStatus
+                    </span>
+                </td>
                 <td>@job.appliedVia</td>
                 <td>@job.appliedTime.ToString("yyyy-MM-dd")</td>
                 <td>
