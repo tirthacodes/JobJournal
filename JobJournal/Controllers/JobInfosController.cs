@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace JobJournal.Controllers
 {
@@ -24,28 +25,36 @@ namespace JobJournal.Controllers
 
         public async Task<IActionResult> Index(string searchTerm, ApplicationStatus? statusFilter)
         {
-            var userId = _userManager.GetUserId(User);
-            var jobsQuery = _context.JobInfos
-                .Where(j => j.userId == userId)
-                .Include(j => j.user) 
-                .AsQueryable(); 
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var jobInfos = _context.JobInfos.Where(j => j.userId == currentUserId);
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                jobsQuery = jobsQuery.Where(j => j.companyName.Contains(searchTerm) || j.role.Contains(searchTerm) || j.jobSummary.Contains(searchTerm));
-                ViewData["CurrentFilter"] = searchTerm; // keeping search term in textbox after refresh
+                jobInfos = jobInfos.Where(j => j.companyName.Contains(searchTerm) || j.role.Contains(searchTerm));
+                ViewData["CurrentFilter"] = searchTerm;
             }
 
-            if (statusFilter.HasValue && statusFilter.Value != 0) 
+            if (statusFilter.HasValue)
             {
-                jobsQuery = jobsQuery.Where(j => j.applicationStatus == statusFilter.Value);
-                ViewData["CurrentStatusFilter"] = statusFilter.Value;
+                jobInfos = jobInfos.Where(j => j.applicationStatus == statusFilter.Value);
+                ViewData["CurrentStatusFilter"] = statusFilter.Value.ToString();
             }
 
-            var jobs = await jobsQuery.ToListAsync();
-            return View(jobs);
-        }
+            var interviewJobs = jobInfos
+                .Where(j => j.applicationStatus == ApplicationStatus.InterviewScheduled)
+                .OrderBy(j => j.appliedTime)
+                .AsEnumerable();
 
+            var otherJobs = jobInfos
+                .Where(j => j.applicationStatus != ApplicationStatus.InterviewScheduled)
+                .OrderByDescending(j => j.appliedTime)
+                .AsEnumerable();
+
+            var sortedJobInfos = interviewJobs.Concat(otherJobs);
+
+            return View(await Task.FromResult(sortedJobInfos));
+        }
 
 
 
