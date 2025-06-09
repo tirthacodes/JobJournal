@@ -17,6 +17,18 @@ public class LogoutModel : PageModel
         _logger = logger;
     }
 
+
+    public async Task<IActionResult> OnGet()
+    {
+        if (_signInManager.IsSignedIn(User))
+        {
+            await _signInManager.SignOutAsync();
+            _logger.LogInformation("User logged out via direct GET to Logout page.");
+        }
+
+        return RedirectToPage("/Index", new { area = "" });
+    }
+
     public async Task<IActionResult> OnPost(string returnUrl = null)
     {
         await _signInManager.SignOutAsync();
