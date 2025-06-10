@@ -29,6 +29,9 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
     options.SlidingExpiration = true;
+
+    options.LoginPath = "/Identity/Account/Login";
+    options.LogoutPath = "/Identity/Account/Logout";
 });
 
 
@@ -61,6 +64,14 @@ app.UseAuthentication();
 
 
 app.UseAuthorization();
+
+
+//temporariy redirecting /account/login to identity/account/login
+app.MapGet("/Account/Login", context =>
+{
+    context.Response.Redirect("/Identity/Account/Login" + context.Request.QueryString);
+    return Task.CompletedTask;
+});
 
 
 //for identity pages
