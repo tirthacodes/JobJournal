@@ -5,6 +5,7 @@ using JobJournal.Areas.Identity.Data;
 using JobJournal.Data.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,18 @@ builder.Services.ConfigureApplicationCookie(options =>
 
     options.LoginPath = "/Identity/Account/Login";
     options.LogoutPath = "/Identity/Account/Logout";
+
+    options.Events = new CookieAuthenticationEvents
+    {
+        OnRedirectToLogin = context =>
+        {
+            context.Response.StatusCode = 302;
+
+            context.Response.Headers["Location"] = options.LoginPath + context.Request.QueryString;
+
+            return Task.CompletedTask;
+        }
+    };
 });
 
 
@@ -64,14 +77,6 @@ app.UseAuthentication();
 
 
 app.UseAuthorization();
-
-
-//temporariy redirecting /account/login to identity/account/login
-app.MapGet("/Account/Login", context =>
-{
-    context.Response.Redirect("/Identity/Account/Login" + context.Request.QueryString);
-    return Task.CompletedTask;
-});
 
 
 //for identity pages
