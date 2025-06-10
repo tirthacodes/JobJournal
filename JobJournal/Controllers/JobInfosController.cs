@@ -73,17 +73,7 @@ namespace JobJournal.Controllers
 
             if (!ModelState.IsValid)
             {
-                foreach (var state in ModelState)
-                {
-                    if (state.Value.Errors.Any())
-                    {
-                        Console.WriteLine($"Error in {state.Key}:");
-                        foreach (var error in state.Value.Errors)
-                        {
-                            Console.WriteLine($"- {error.ErrorMessage}");
-                        }
-                    }
-                }
+                TempData["JobCreationFailedMessage"] = "Job application creation failed!";
                 return View(jobInfo);
             }
 
@@ -91,6 +81,7 @@ namespace JobJournal.Controllers
 
             _context.JobInfos.Add(jobInfo);
             await _context.SaveChangesAsync();
+            TempData["JobCreatedMessage"] = "Job application saved successfully!";
             return RedirectToAction(nameof(Index));
         }
 
