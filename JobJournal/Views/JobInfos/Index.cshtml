@@ -30,40 +30,54 @@
 </form>
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <td>Company Name</td>
-            <td>Role</td>
-            <td>Job Summary</td>
-            <td>Status</td>
-            <td>Applied via</td>
-            <td>Applied Time</td>
-            <td>Action</td>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(var job in Model)
-        {
+<div class="table-responsive">
+    <table class="table">
+        <thead>
             <tr>
-                <td>@job.companyName</td>
-                <td>@job.role</td>
-                <td>@job.jobSummary</td>
-                <td>
-                    <span class="status-@job.applicationStatus.ToString() px-2 py-1 rounded">
-                        @job.applicationStatus
-                    </span>
-                </td>
-                <td>@job.appliedVia</td>
-                <td>@job.appliedTime.ToString("MMMM d, yyyy")</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@job.id" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
-                    <a asp-action="Delete" asp-route-id="@job.id" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
-                </td>
+                <td>Company Name</td>
+                <td>Role</td>
+                <td>Job Summary</td>
+                <td>Status</td>
+                <td>Applied via</td>
+                <td>Applied Time</td>
+                <td>Action</td>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                @foreach (var job in Model)
+                {
+                    <tr>
+                        <td>@job.companyName</td>
+                        <td>@job.role</td>
+                        <td>@job.jobSummary</td>
+                        <td>
+                            <span class="status-@job.applicationStatus.ToString() px-2 py-1 rounded">
+                                @job.applicationStatus
+                            </span>
+                        </td>
+                        <td>@job.appliedVia</td>
+                        <td>@job.appliedTime.ToString("MMMM d, yyyy")</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@job.id" class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil"></i></a>
+                            <a asp-action="Delete" asp-route-id="@job.id" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="7" class="text-center text-muted">
+                        No Job Application Found. Start by adding a new one!
+                        <a asp-controller="JobInfos" asp-action="Create" class="btn btn-sm btn-outline-success"> <i class="bi bi-plus-circle"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 
 
