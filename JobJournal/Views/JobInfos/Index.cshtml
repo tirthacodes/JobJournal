@@ -24,7 +24,7 @@
             <a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
         </div>
         <div class="col-md-2 text-end">
-            <a asp-controller="JobInfos" asp-action="Create" class="btn btn-outline-success"> <i class="bi bi-plus-circle"></i> Add New Application</a>
+            <a asp-controller="JobInfos" asp-action="Create" class="btn btn-outline-success"> <i class="bi bi-plus-circle"></i> Add New</a>
         </div>
     </div>
 </form>
@@ -55,7 +55,7 @@
                     </span>
                 </td>
                 <td>@job.appliedVia</td>
-                <td>@job.appliedTime.ToString("yyyy-MM-dd")</td>
+                <td>@job.appliedTime.ToString("MMMM d, yyyy")</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@job.id" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
                     <a asp-action="Delete" asp-route-id="@job.id" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
