@@ -7,54 +7,82 @@
 
 <h2>Edit Job Application</h2>
 
-<form asp-action="Edit" method="post">
-    <input type="hidden" asp-for="id" />
-    <input type="hidden" asp-for="userId" />
-    <input type="hidden" asp-for="appliedTime"/>
+<div class="mb-5">
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="id" />
+        <input type="hidden" asp-for="userId" />
+        <input type="hidden" asp-for="appliedTime" />
 
 
-    <div class="form-group">
-        <label asp-for="companyName"></label>
-        <input asp-for="companyName" class="form-control" />
-        <span asp-validation-for="companyName" class="text-danger"></span>
+        <div class="form-group">
+            <label asp-for="companyName"></label>
+            <input asp-for="companyName" class="form-control" />
+            <span asp-validation-for="companyName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="role"></label>
+            <input asp-for="role" class="form-control" />
+            <span asp-validation-for="role" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="jobSummary"></label>
+            <textarea asp-for="jobSummary" class="form-control"></textarea>
+            <span asp-validation-for="jobSummary" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="applicationStatus"></label>
+            <select asp-for="applicationStatus" asp-items="Html.GetEnumSelectList<ApplicationStatus>()" class="form-control"></select>
+            <span asp-validation-for="applicationStatus" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="appliedVia"></label>
+            <select asp-for="appliedVia" asp-items="Html.GetEnumSelectList<AppliedVia>()" class="form-control"></select>
+            <span asp-validation-for="appliedVia" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Applied Time</label>
+            <input asp-for="appliedTime" type="date" class="form-control" />
+            <span asp-validation-for="appliedTime" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="notes"></label>
+            <textarea asp-for="notes" class="form-control"></textarea>
+            <span asp-validation-for="notes" class="text-danger"></span>
+        </div>
+
+        <div class="mt-2">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+
+
+@if (TempData["JobEditFailedMessage"] != null)
+{
+    <div aria-live="polite" aria-atomic="true" class="position-relative">
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+
+            @if (TempData["JobEditFailedMessage"] != null)
+            {
+                <div class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            @TempData["JobEditFailedMessage"]
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            }
+
+        </div>
     </div>
 
-    <div class="form-group">
-        <label asp-for="role"></label>
-        <input asp-for="role" class="form-control" />
-        <span asp-validation-for="role" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="jobSummary"></label>
-        <textarea asp-for="jobSummary" class="form-control"></textarea>
-        <span asp-validation-for="jobSummary" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="applicationStatus"></label>
-        <select asp-for="applicationStatus" asp-items="Html.GetEnumSelectList<ApplicationStatus>()" class="form-control"></select>
-        <span asp-validation-for="applicationStatus" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="appliedVia"></label>
-        <select asp-for="appliedVia" asp-items="Html.GetEnumSelectList<AppliedVia>()" class="form-control"></select>
-        <span asp-validation-for="appliedVia" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label>Applied Time</label>
-        <input asp-for="appliedTime" type="date" class="form-control" />
-        <span asp-validation-for="appliedTime" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="notes"></label>
-        <textarea asp-for="notes" class="form-control"></textarea>
-        <span asp-validation-for="notes" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Save Changes</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-</form>
+}

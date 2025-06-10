@@ -79,27 +79,72 @@
     </table>
 </div>
 
-@if (TempData["JobCreatedMessage"] != null || TempData["JobCreationFailedMessage"] != null)
+@if (TempData["JobCreatedMessage"] != null || TempData["JobEditedMessage"] != null || TempData["JobDeletedMessage"] != null)
 {
-    <div aria-live="polite" aria-atomic="true" class="position-relative">
-        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    @if (TempData["JobCreatedMessage"] != null)
+    {
+        <div aria-live="polite" aria-atomic="true" class="position-relative">
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
 
-            @if (TempData["JobCreatedMessage"] != null)
-            {
-                <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
-                    <div class="d-flex">
-                        <div class="toast-body">
-                            @TempData["JobCreatedMessage"]
+                @if (TempData["JobCreatedMessage"] != null)
+                {
+                    <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                @TempData["JobCreatedMessage"]
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                         </div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
-                </div>
-            }
-
+                }
+            </div>
         </div>
-    </div>
+    }
+
+
+    @if (TempData["JobEditedMessage"] != null)
+    {
+        <div aria-live="polite" aria-atomic="true" class="position-relative">
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+
+                @if (TempData["JobEditedMessage"] != null)
+                {
+                    <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                @TempData["JobEditedMessage"]
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (TempData["JobDeletedMessage"] != null)
+    {
+        <div aria-live="polite" aria-atomic="true" class="position-relative">
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+
+                @if (TempData["JobDeletedMessage"] != null)
+                {
+                    <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                @TempData["JobDeletedMessage"]
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
 
 }
+
+
 
 
 

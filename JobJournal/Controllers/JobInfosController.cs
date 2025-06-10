@@ -115,12 +115,16 @@ namespace JobJournal.Controllers
                 return NotFound();
 
             if (!ModelState.IsValid)
+            {
+                TempData["JobEditFailedMessage"] = "Job application Edit Failed!";
                 return View(jobInfo);
+            }
 
             try
             {
                 _context.Update(jobInfo);
                 await _context.SaveChangesAsync();
+                TempData["JobEditedMessage"] = "Job application edited successfully!";
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -129,7 +133,6 @@ namespace JobJournal.Controllers
                 else
                     throw;
             }
-
             return RedirectToAction(nameof(Index));
         }
 
@@ -161,6 +164,11 @@ namespace JobJournal.Controllers
             {
                 _context.JobInfos.Remove(jobInfo);
                 await _context.SaveChangesAsync();
+                TempData["JobDeletedMessage"] = "Job application deleted successfully!";
+            }
+            else
+            {
+                TempData["JobDeleteFailedMessage"] = "Job application failed to delete!";
             }
 
             return RedirectToAction(nameof(Index));
