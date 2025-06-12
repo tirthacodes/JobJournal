@@ -25,9 +25,46 @@ namespace JobJournal.Controllers
 
         public async Task<IActionResult> Index()
         {
-            
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            return View();
+            var model = new DashboardViewModel();
+
+            if (userId != null)
+            {
+                var userJobInfos = _context.JobInfos.Where(j => j.userId == userId);
+
+                // Calculating date ranges
+                var today = DateTime.Today;
+                // here the startOfWeek considering Sunday of the current week
+                var diff = (7 + (today.DayOfWeek - DayOfWeek.Sunday)) % 7;
+                var startOfWeek = today.AddDays(-1 * diff);
+
+                var startOfMonth = new DateTime(today.Year, today.Month, 1);
+
+                model.ApplicationsThisWeek = await userJobInfos
+                    .Where(j => j.appliedTime >= startOfWeek && j.appliedTime <= today.AddDays(1).AddTicks(-1))
+                    .CountAsync();
+
+                model.ApplicationsThisMonth = await userJobInfos
+                    .Where(j => j.appliedTime >= startOfMonth && j.appliedTime <= today.AddDays(1).AddTicks(-1))
+                    .CountAsync();
+
+                model.InterviewsScheduled = await userJobInfos
+                    .Where(j => j.applicationStatus == ApplicationStatus.InterviewScheduled)
+                    .CountAsync();
+
+                model.OffersReceived = await userJobInfos
+                    .Where(j => j.applicationStatus == ApplicationStatus.Accepted)
+                    .CountAsync();
+
+                model.FollowUpsDue = await userJobInfos
+                    .Where(j => j.applicationStatus == ApplicationStatus.FollowUp)
+                    .CountAsync();
+
+                model.TotalApplications = await userJobInfos.CountAsync();
+            }
+
+            return View(model);
         }
 
 
