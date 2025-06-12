@@ -15,7 +15,7 @@
             <input type="text" name="searchTerm" class="form-control" placeholder="Search Company or Role..." value="@ViewData["CurrentFilter"]" />
         </div>
         <div class="col-md-3">
-            <select name="statusFilter" asp-items="Html.GetEnumSelectList<ApplicationStatus>()" class="form-control">
+            <select name="statusFilter" asp-items="Html.GetEnumSelectList<ApplicationStatus>()" class="form-control form-select">
                 <option value="">All Status</option>
             </select>
         </div>
