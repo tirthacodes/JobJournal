@@ -25,7 +25,7 @@
     </div>
     <div>
         <label>Status</label>
-        <select asp-for="applicationStatus" asp-items="Html.GetEnumSelectList<ApplicationStatus>()" class="form-control"></select>
+        <select asp-for="applicationStatus" asp-items="Html.GetEnumSelectList<ApplicationStatus>()" class="form-control form-select"></select>
         <span asp-validation-for="applicationStatus" class="text-danger"></span>
     </div>
     <div>
@@ -35,7 +35,7 @@
     </div>
     <div>
         <label>Applied Time</label>
-        <input asp-for="appliedTime" type="date" class="form-control form-select" />
+        <input asp-for="appliedTime" type="date" class="form-control" />
         <span asp-validation-for="appliedTime" class="text-danger"></span>
     </div>
     <div>

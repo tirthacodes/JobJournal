@@ -32,6 +32,7 @@ namespace JobJournal.Models
         [Required]
         public AppliedVia appliedVia { get; set; }
 
+        [ValidateNever]
         public string notes { get; set; }
 
         [DataType(DataType.Date)]
