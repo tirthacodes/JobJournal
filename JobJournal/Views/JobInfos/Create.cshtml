@@ -30,12 +30,12 @@
     </div>
     <div>
         <label>Applied Via</label>
-        <select asp-for="appliedVia" asp-items="Html.GetEnumSelectList<AppliedVia>()" class="form-control"></select>
+        <select asp-for="appliedVia" asp-items="Html.GetEnumSelectList<AppliedVia>()" class="form-control form-select"></select>
         <span asp-validation-for="appliedVia" class="text-danger"></span>
     </div>
     <div>
         <label>Applied Time</label>
-        <input asp-for="appliedTime" type="date" class="form-control"/>
+        <input asp-for="appliedTime" type="date" class="form-control form-select" />
         <span asp-validation-for="appliedTime" class="text-danger"></span>
     </div>
     <div>

@@ -34,13 +34,13 @@
 
         <div class="form-group">
             <label asp-for="applicationStatus"></label>
-            <select asp-for="applicationStatus" asp-items="Html.GetEnumSelectList<ApplicationStatus>()" class="form-control"></select>
+            <select asp-for="applicationStatus" asp-items="Html.GetEnumSelectList<ApplicationStatus>()" class="form-control form-select"></select>
             <span asp-validation-for="applicationStatus" class="text-danger"></span>
         </div>
 
         <div class="form-group">
             <label asp-for="appliedVia"></label>
-            <select asp-for="appliedVia" asp-items="Html.GetEnumSelectList<AppliedVia>()" class="form-control"></select>
+            <select asp-for="appliedVia" asp-items="Html.GetEnumSelectList<AppliedVia>()" class="form-control form-select"></select>
             <span asp-validation-for="appliedVia" class="text-danger"></span>
         </div>
 
