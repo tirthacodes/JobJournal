@@ -54,7 +54,7 @@ builder.Services.AddControllersWithViews();
 //this added for razor views
 builder.Services.AddRazorPages();
 
-builder.Services.AddSingleton<IEmailSender, DummyEmailSender>();
+builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
 
 var app = builder.Build();
