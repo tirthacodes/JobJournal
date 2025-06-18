@@ -1,0 +1,56 @@
+﻿@model Microsoft.AspNetCore.Identity.IdentityUser
+
+@{
+    ViewData["Title"] = "Your Profile";
+}
+
+<div class="container mt-5 me-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h3 class="mb-0">Welcome, @Model.UserName.Split('@')[0]!</h3>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">Account Details</h4>
+                    <hr />
+                    <table class="table table-bordered table-sm">
+                        <tbody>
+                            <tr>
+                                <th scope="row" class="w-25">Username:</th>
+                                <td>@Model.UserName</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Email:</th>
+                                <td>@Model.Email</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Email Confirmed:</th>
+                                <td>@(Model.EmailConfirmed ? "Yes" : "No")</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Phone Number:</th>
+                                <td>@(string.IsNullOrEmpty(Model.PhoneNumber) ? "Not set" : Model.PhoneNumber)</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Phone Confirmed:</th>
+                                <td>@(Model.PhoneNumberConfirmed ? "Yes" : "No")</td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+
+                    <h4 class="card-title mt-4">Account Management</h4>
+                    <hr />
+                    <p>
+                        <a asp-area="Identity" asp-page="/Account/Manage/ChangePassword" class="btn btn-outline-primary me-2">Change Password</a>
+                        <a asp-area="Identity" asp-page="/Account/Manage/Email" class="btn btn-outline-primary me-2">Manage Email</a>
+                        <a asp-area="Identity" asp-page="/Account/Manage/TwoFactorAuthentication" class="btn btn-outline-secondary">Two-Factor Authentication</a>
+                    </p>
+
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

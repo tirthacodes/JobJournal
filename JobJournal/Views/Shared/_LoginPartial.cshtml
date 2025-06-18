@@ -7,7 +7,7 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
-            <a id="LoggedIn" class="nav-link text-dark font-monospace" asp-area="Identity" asp-page="/Account/Manage/Index" title="LoggedIn">Hello @UserManager.GetUserName(User).Split('@')[0]!<i class="bi bi-circle-fill text-success"></i></a>
+            <a id="LoggedIn" class="nav-link text-dark font-monospace" asp-controller="Users" asp-action="Profile" title="LoggedIn">Hello @UserManager.GetUserName(User).Split('@')[0]!<i class="bi bi-circle-fill text-success"></i></a>
     </li>
     <li class="nav-item">
         <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
