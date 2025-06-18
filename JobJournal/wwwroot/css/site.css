@@ -21,20 +21,57 @@ body {
   margin-bottom: 60px;
 }
 
-.icon-xs {
-    font-size: 0.8em;
-    line-height: 1;
-}
-
-
-.chat-icon-xs {
-    font-size: 0.60em;
-    line-height: 1;
-}
-
 .btn-xxs {
     padding: 0.1rem 0.3rem;
     font-size: 0.75rem;
     line-height: 1;
     border-radius: 0.2rem; 
 }
+
+
+.icon-xs {
+    font-size: 0.8em;
+    line-height: 1;
+}
+
+.chat-icon-xs {
+    font-size: 0.65em;
+    line-height: 1;
+}
+
+
+
+/*for the popover of notes*/
+.note-popover {
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 10px 15px;
+    color: #333;
+    font-size: 0.9em;
+    line-height: 1.4;
+    position: absolute;
+    z-index: 1000;
+    display: none;
+    max-width: 250px;
+    max-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+}
+
+    .note-popover::before {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 15px;
+        transform: rotate(45deg);
+        width: 20px;
+        height: 20px;
+        background-color: inherit;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        z-index: -1;
+        border-radius: 4px;
+        display: block;
+    }

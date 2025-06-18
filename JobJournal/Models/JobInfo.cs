@@ -33,6 +33,7 @@ namespace JobJournal.Models
         public AppliedVia appliedVia { get; set; }
 
         [ValidateNever]
+        [StringLength(maximumLength:20)]
         public string notes { get; set; }
 
         [DataType(DataType.Date)]
