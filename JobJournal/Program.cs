@@ -16,6 +16,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
 
 
+//for signing in through google
+builder.Services.AddAuthentication()
+    .AddGoogle(googleOptions =>
+    {
+        googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+        googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+        // Optional: specify the redirect URI if it's not the default /signin-google
+        // googleOptions.CallbackPath = "/signin-google"; // This is the default, usually not needed to specify
+    });
+
+
+
 //adding services for auth
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
