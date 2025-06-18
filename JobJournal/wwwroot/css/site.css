@@ -20,3 +20,21 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.icon-xs {
+    font-size: 0.8em;
+    line-height: 1;
+}
+
+
+.chat-icon-xs {
+    font-size: 0.60em;
+    line-height: 1;
+}
+
+.btn-xxs {
+    padding: 0.1rem 0.3rem;
+    font-size: 0.75rem;
+    line-height: 1;
+    border-radius: 0.2rem; 
+}

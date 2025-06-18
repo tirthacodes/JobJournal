@@ -60,8 +60,13 @@
                         <td>@job.appliedVia</td>
                         <td>@job.appliedTime.ToString("MMMM d, yyyy")</td>
                         <td>
-                            <a asp-action="Edit" asp-route-id="@job.id" class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil"></i></a>
-                            <a asp-action="Delete" asp-route-id="@job.id" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                            <a asp-action="Edit" asp-route-id="@job.id" class="btn btn-sm btn-outline-primary me-1" title="Edit"><i class="bi bi-pencil"></i></a>
+                            
+                            <a asp-action="Delete" asp-route-id="@job.id" class="btn btn-sm btn-outline-danger" title="Delete"><i class="bi bi-trash"></i></a>
+
+                            <a href="#" class="btn btn-sm btn-xxs btn-outline-info mx-1" title="@job.notes" data-job-id="@job.id">
+                                <i class="bi bi-chat-text chat-icon-xs"></i>
+                            </a>
                         </td>
                     </tr>
                 }
