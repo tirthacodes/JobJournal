@@ -19,7 +19,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(buil
 //adding services for auth
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = false;
+    options.SignIn.RequireConfirmedAccount = true;
 })
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders();
