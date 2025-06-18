@@ -31,4 +31,13 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
 
+	<ItemGroup>
+		<!-- This ensures all SQLite database files are published -->
+		<Content Include="JobJournal.db">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		
+	</ItemGroup>
+
 </Project>
