@@ -34,7 +34,7 @@ namespace JobJournal.Models
 
         [ValidateNever]
         [StringLength(maximumLength:20)]
-        public string notes { get; set; }
+        public string? notes { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime appliedTime { get; set; }
