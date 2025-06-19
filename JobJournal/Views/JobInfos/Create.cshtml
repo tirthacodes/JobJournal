@@ -4,47 +4,49 @@
 @{
     ViewData["Title"] = "Create Job Info";
 }
+<div class="">
 
-<h2>Create Job Info</h2>
+    <h2>Create Job Info</h2>
 
-<form asp-action="Create">
-    <div>
-        <label>Company Name *</label>
-        <input asp-for="companyName" class="form-control" />
-        <span asp-validation-for="companyName" class="text-danger"></span>
-    </div>
-    <div>
-        <label>Role *</label>
-        <input asp-for="role" class="form-control" />
-        <span asp-validation-for="role" class="text-danger"></span>
-    </div>
-    <div>
-        <label>Job Summary *</label>
-        <textarea asp-for="jobSummary" class="form-control"></textarea>
-        <span asp-validation-for="jobSummary" class="text-danger"></span>
-    </div>
-    <div>
-        <label>Status *</label>
-        <select asp-for="applicationStatus" asp-items="Html.GetEnumSelectList<ApplicationStatus>()" class="form-control form-select"></select>
-        <span asp-validation-for="applicationStatus" class="text-danger"></span>
-    </div>
-    <div>
-        <label>Applied Via *</label>
-        <select asp-for="appliedVia" asp-items="Html.GetEnumSelectList<AppliedVia>()" class="form-control form-select"></select>
-        <span asp-validation-for="appliedVia" class="text-danger"></span>
-    </div>
-    <div>
-        <label>Applied Time *</label>
-        <input asp-for="appliedTime" type="date" class="form-control" />
-        <span asp-validation-for="appliedTime" class="text-danger"></span>
-    </div>
-    <div>
-        <label>Notes</label>
-        <textarea asp-for="notes" class="form-control"></textarea>
-        <span asp-validation-for="notes" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary mt-2 mb-5">Submit</button>
-</form>
+    <form asp-action="Create">
+        <div>
+            <label>Company Name *</label>
+            <input asp-for="companyName" class="form-control" />
+            <span asp-validation-for="companyName" class="text-danger"></span>
+        </div>
+        <div>
+            <label>Role *</label>
+            <input asp-for="role" class="form-control" />
+            <span asp-validation-for="role" class="text-danger"></span>
+        </div>
+        <div>
+            <label>Job Summary *</label>
+            <textarea asp-for="jobSummary" class="form-control"></textarea>
+            <span asp-validation-for="jobSummary" class="text-danger"></span>
+        </div>
+        <div>
+            <label>Status *</label>
+            <select asp-for="applicationStatus" asp-items="Html.GetEnumSelectList<ApplicationStatus>()" class="form-control form-select"></select>
+            <span asp-validation-for="applicationStatus" class="text-danger"></span>
+        </div>
+        <div>
+            <label>Applied Via *</label>
+            <select asp-for="appliedVia" asp-items="Html.GetEnumSelectList<AppliedVia>()" class="form-control form-select"></select>
+            <span asp-validation-for="appliedVia" class="text-danger"></span>
+        </div>
+        <div class="col-sm-2">
+            <label>Applied Time *</label>
+            <input asp-for="appliedTime" type="date" class="form-control" />
+            <span asp-validation-for="appliedTime" class="text-danger"></span>
+        </div>
+        <div>
+            <label>Notes</label>
+            <textarea asp-for="notes" class="form-control"></textarea>
+            <span asp-validation-for="notes" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary mt-2 mb-5">Submit</button>
+    </form>
+</div>
 
 @if (TempData["JobCreatedMessage"] != null || TempData["JobCreationFailedMessage"] != null)
 {
