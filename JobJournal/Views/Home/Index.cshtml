@@ -4,79 +4,97 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4 mb-4">Welcome to JobJournal!</h1>
+    <h2 class="display-4 mb-4">Welcome to JobJournal!</h2>
     @if (User.Identity.IsAuthenticated)
     {
-        <p class="lead">Hello @User.Identity.Name, here's your job search snapshot:</p>
+        @if (Model.TotalApplications > 0)
+        {
+            <p class="lead">Hello @User.Identity.Name, here's your job search snapshot:</p>
 
-        <div class="container mt-5">
-            <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
-                <div class="col">
-                    <div class="card h-100 shadow-sm border-primary">
-                        <div class="card-body">
-                            <h5 class="card-title text-primary">Total Applications</h5>
-                            <p class="card-text fs-2 fw-bold">@Model.TotalApplications</p>
+            <div class="container mt-5">
+                <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
+                    <div class="col">
+                        <div class="card h-100 shadow-sm border-primary">
+                            <div class="card-body">
+                                <h5 class="card-title text-primary">Total Applications</h5>
+                                <p class="card-text fs-2 fw-bold">@Model.TotalApplications</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col">
-                    <div class="card h-100 shadow-sm border-info">
-                        <div class="card-body">
-                            <h5 class="card-title text-info">Applications This Week</h5>
-                            <p class="card-text fs-2 fw-bold">@Model.ApplicationsThisWeek</p>
+                    <div class="col">
+                        <div class="card h-100 shadow-sm border-info">
+                            <div class="card-body">
+                                <h5 class="card-title text-info">Applications This Week</h5>
+                                <p class="card-text fs-2 fw-bold">@Model.ApplicationsThisWeek</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col">
-                    <div class="card h-100 shadow-sm border-secondary">
-                        <div class="card-body">
-                            <h5 class="card-title text-secondary">Applications This Month</h5>
-                            <p class="card-text fs-2 fw-bold">@Model.ApplicationsThisMonth</p>
+                    <div class="col">
+                        <div class="card h-100 shadow-sm border-secondary">
+                            <div class="card-body">
+                                <h5 class="card-title text-secondary">Applications This Month</h5>
+                                <p class="card-text fs-2 fw-bold">@Model.ApplicationsThisMonth</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col">
-                    <div class="card h-100 shadow-sm border-warning">
-                        <div class="card-body">
-                            <h5 class="card-title text-warning">Interviews Scheduled</h5>
-                            <p class="card-text fs-2 fw-bold">@Model.InterviewsScheduled</p>
+                    <div class="col">
+                        <div class="card h-100 shadow-sm border-warning">
+                            <div class="card-body">
+                                <h5 class="card-title text-warning">Interviews Scheduled</h5>
+                                <p class="card-text fs-2 fw-bold">@Model.InterviewsScheduled</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col">
-                    <div class="card h-100 shadow-sm border-danger">
-                        <div class="card-body">
-                            <h5 class="card-title text-danger">Follow-ups Due</h5>
-                            <p class="card-text fs-2 fw-bold">@Model.FollowUpsDue</p>
+                    <div class="col">
+                        <div class="card h-100 shadow-sm border-danger">
+                            <div class="card-body">
+                                <h5 class="card-title text-danger">Follow-ups Due</h5>
+                                <p class="card-text fs-2 fw-bold">@Model.FollowUpsDue</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col">
-                    <div class="card h-100 shadow-sm border-success">
-                        <div class="card-body">
-                            <h5 class="card-title text-success">Offers Received</h5>
-                            <p class="card-text fs-2 fw-bold">@Model.OffersReceived</p>
+                    <div class="col">
+                        <div class="card h-100 shadow-sm border-success">
+                            <div class="card-body">
+                                <h5 class="card-title text-success">Offers Received</h5>
+                                <p class="card-text fs-2 fw-bold">@Model.OffersReceived</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="mt-3">
-            <a asp-controller="Statistics" asp-action="Index" class="btn btn-secondary btn-group-sm rounded-pill shadow-sm">
-                <i class="bi bi-bar-chart-fill me-2"></i> View Statistics
-            </a>
-        </div>
+            <div class="mt-3">
+                <a asp-controller="Statistics" asp-action="Index" class="btn btn-secondary btn-group-sm rounded-pill shadow-sm">
+                    <i class="bi bi-bar-chart-fill me-2"></i> View Statistics
+                </a>
+            </div>
 
-        <div class="mt-3 my-5">
-            <p>Ready to add more applications or manage your existing ones?</p>
-            <a asp-controller="JobInfos" asp-action="Create" class="btn btn-lg btn-success me-2">
-                <i class="bi bi-plus-circle"></i> Add New Application
-            </a>
-            <a asp-controller="JobInfos" asp-action="Index" class="btn btn-lg btn-outline-primary">
-                <i class="bi bi-list-task"></i> View All Applications
-            </a>
-        </div>
+            <div class="mt-3 my-5">
+                <p>Ready to add more applications or manage your existing ones?</p>
+                <a asp-controller="JobInfos" asp-action="Create" class="btn btn-lg btn-success me-2">
+                    <i class="bi bi-plus-circle"></i> Add New Application
+                </a>
+                <a asp-controller="JobInfos" asp-action="Index" class="btn btn-lg btn-outline-primary">
+                    <i class="bi bi-list-task"></i> View All Applications
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5 my-5">
+                <h2 class="display-6 text-muted mb-4">
+                    <i class="bi bi-person-fill-add" style="font-size: 3rem;"></i><br />
+                    Welcome Aboard!
+                </h2>
+                <p class="lead text-muted mb-4">
+                    It looks like you're new here. Start tracking your job applications now!
+                </p>
+                <a asp-controller="JobInfos" asp-action="Create" class="btn btn-lg btn-success">
+                    <i class="bi bi-plus-circle me-2"></i> Add Your First Application
+                </a>
+            </div>
+        }
     }
     else
     {

@@ -30,22 +30,22 @@
     </div>
 </form>
 
-<div class="table-responsive mb-5">
-    <table class="table">
-        <thead>
-            <tr>
-                <td>Company Name</td>
-                <td>Role</td>
-                <td>Job Summary</td>
-                <td>Status</td>
-                <td>Applied via</td>
-                <td>Applied Time</td>
-                <td>Action</td>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model.Any())
-            {
+@if (Model.Any())
+{
+    <div class="table-responsive mb-5">
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>Company Name</td>
+                    <td>Role</td>
+                    <td>Job Summary</td>
+                    <td>Status</td>
+                    <td>Applied via</td>
+                    <td>Applied Time</td>
+                    <td>Action</td>
+                </tr>
+            </thead>
+            <tbody>
                 @foreach (var job in Model)
                 {
                     <tr>
@@ -58,7 +58,7 @@
                             </span>
                         </td>
                         <td>@job.appliedVia</td>
-                        <td>@job.appliedTime.ToString("MMMM d, yyyy")</td>
+                        <td>@job.appliedTime.ToString("MMMM d,yyyy")</td>
                         <td>
                             <a asp-action="Edit" asp-route-id="@job.id" class="btn btn-sm btn-outline-primary me-1" title="Edit">
                                 <i class="bi bi-pencil"></i>
@@ -79,19 +79,26 @@
                         </td>
                     </tr>
                 }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="7" class="text-center text-muted">
-                        No Job Application Found. Start by adding a new one!
-                        <a asp-controller="JobInfos" asp-action="Create" class="btn btn-sm btn-outline-success"> <i class="bi bi-plus-circle"></i></a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="text-center py-5 my-5">
+        <h2 class="display-6 text-muted mb-4">
+            <i class="bi bi-lightbulb" style="font-size: 3rem;"></i><br />
+            Ready to Track Your Job Search?
+        </h2>
+        <p class="lead text-muted mb-4">
+            This is where you'll see all your job applications.<br />
+            No entries yet? Let's add your first one and start monitoring your progress!
+        </p>
+        <a asp-controller="JobInfos" asp-action="Create" class="btn btn-lg btn-success">
+            <i class="bi bi-plus-circle me-2"></i> Add Your First Application
+        </a>
+    </div>
+}
 
 @* Modals for notes and toast messages *@
 @if (TempData["JobCreatedMessage"] != null || TempData["JobEditedMessage"] != null || TempData["JobDeletedMessage"] != null)
@@ -156,6 +163,9 @@
 </div>
 
 @section Scripts {
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var toastElList = [].slice.call(document.querySelectorAll('.toast'))
@@ -173,7 +183,7 @@
                 var noteContent = button.getAttribute('data-note-content');
 
                 var modalBody = notesModal.querySelector('.modal-body');
-                modalBody.textContent = noteContent || "No notes available."; 
+                modalBody.textContent = noteContent || "No notes available.";
             });
         });
     </script>
