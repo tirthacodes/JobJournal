@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml.Style;
+using OfficeOpenXml;
 using System.Security.Claims;
 
 namespace JobJournal.Controllers
@@ -175,6 +177,79 @@ namespace JobJournal.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+
+
+        // GET: JobInfos/ExportExcel
+        public async Task<IActionResult> ExportExcel(string searchTerm, ApplicationStatus? statusFilter)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var jobInfosQuery = from j in _context.JobInfos
+                                where j.userId == userId
+                                select j;
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                jobInfosQuery = jobInfosQuery.Where(j => j.companyName.ToLower().Contains(searchTerm.ToLower())
+                                                    || j.role.ToLower().Contains(searchTerm.ToLower())
+                                                    || (j.jobSummary != null && j.jobSummary.ToLower().Contains(searchTerm.ToLower()))
+                                                    || (j.notes != null && j.notes.ToLower().Contains(searchTerm.ToLower())));
+            }
+
+            if (statusFilter.HasValue)
+            {
+                jobInfosQuery = jobInfosQuery.Where(j => j.applicationStatus == statusFilter.Value);
+            }
+
+            var jobApplications = await jobInfosQuery.OrderByDescending(j => j.appliedTime).ToListAsync();
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Job Applications");
+
+                worksheet.Cells[1, 1].Value = "Company Name";
+                worksheet.Cells[1, 2].Value = "Role";
+                worksheet.Cells[1, 3].Value = "Job Summary";
+                worksheet.Cells[1, 4].Value = "Application Status";
+                worksheet.Cells[1, 5].Value = "Applied Via";
+                worksheet.Cells[1, 6].Value = "Applied Time";
+                worksheet.Cells[1, 7].Value = "Notes";
+
+                using (var range = worksheet.Cells[1, 1, 1, 7])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                    range.Style.Font.Color.SetColor(System.Drawing.Color.Black);
+                }
+
+                for (int i = 0; i < jobApplications.Count; i++)
+                {
+                    var job = jobApplications[i];
+                    int row = i + 2;
+
+                    worksheet.Cells[row, 1].Value = job.companyName;
+                    worksheet.Cells[row, 2].Value = job.role;
+                    worksheet.Cells[row, 3].Value = job.jobSummary;
+                    worksheet.Cells[row, 4].Value = job.applicationStatus.ToString();
+                    worksheet.Cells[row, 5].Value = job.appliedVia;
+                    worksheet.Cells[row, 6].Value = job.appliedTime.ToString("yyyy-MM-dd HH:mm");
+                    worksheet.Cells[row, 7].Value = job.notes;
+                }
+
+                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                var fileBytes = package.GetAsByteArray();
+                var fileName = $"JobJournal_Export_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+                var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+                return File(fileBytes, contentType, fileName);
+            }
         }
     }
 }

@@ -10,17 +10,22 @@
         <div class="col-md-4">
             <input type="text" name="searchTerm" class="form-control" placeholder="Search Company or Role..." value="@ViewData["CurrentFilter"]" />
         </div>
+
         <div class="col-md-3">
             <select name="statusFilter" asp-items="Html.GetEnumSelectList<ApplicationStatus>()" class="form-control form-select">
                 <option value="">All Status</option>
             </select>
         </div>
+
         <div class="col-md-3">
             <button type="submit" class="btn btn-primary">Search</button>
             <a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
         </div>
+
+
         <div class="col-md-2 text-end">
             <a asp-controller="JobInfos" asp-action="Create" class="btn btn-outline-success"> <i class="bi bi-plus-circle"></i> Add New</a>
+            <a asp-controller="JobInfos" asp-action="ExportExcel" class="btn btn-sm btn-outline-primary" title="Export to Excel"> <i class="bi bi-download"></i></a>
         </div>
     </div>
 </form>
