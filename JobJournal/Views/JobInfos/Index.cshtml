@@ -1,13 +1,9 @@
 ﻿@using JobJournal.Data.Enums
-@*Defining model*@
 @model IEnumerable<JobInfo>
 
-
-@*Defining ViewData*@
 @{
     ViewData["Title"] = "Job Infos";
 }
-
 
 <form asp-controller="JobInfos" asp-action="Index" method="get">
     <div class="row mb-3 align-items-center">
@@ -28,7 +24,6 @@
         </div>
     </div>
 </form>
-
 
 <div class="table-responsive mb-5">
     <table class="table">
@@ -68,13 +63,14 @@
                                 <i class="bi bi-trash"></i>
                             </a>
 
-                            <a href="#"
-                               class="btn btn-sm btn-xxs btn-outline-info note-trigger"
-                               title="@job.notes"
-                               data-job-id="@job.id"
-                               data-note-content="@job.notes">
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-info note-trigger"
+                                    title="View Notes"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#notesModal"
+                                    data-note-content="@job.notes">
                                 <i class="bi bi-chat-text chat-icon-xs"></i>
-                            </a>
+                            </button>
                         </td>
                     </tr>
                 }
@@ -92,72 +88,88 @@
     </table>
 </div>
 
+@* Modals for notes and toast messages *@
 @if (TempData["JobCreatedMessage"] != null || TempData["JobEditedMessage"] != null || TempData["JobDeletedMessage"] != null)
 {
-    @if (TempData["JobCreatedMessage"] != null)
-    {
-        <div aria-live="polite" aria-atomic="true" class="position-relative">
-            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div aria-live="polite" aria-atomic="true" class="position-relative">
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
 
-                @if (TempData["JobCreatedMessage"] != null)
-                {
-                    <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
-                        <div class="d-flex">
-                            <div class="toast-body">
-                                @TempData["JobCreatedMessage"]
-                            </div>
-                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            @if (TempData["JobCreatedMessage"] != null)
+            {
+                <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            @TempData["JobCreatedMessage"]
                         </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
-                }
-            </div>
-        </div>
-    }
+                </div>
+            }
 
-
-    @if (TempData["JobEditedMessage"] != null)
-    {
-        <div aria-live="polite" aria-atomic="true" class="position-relative">
-            <div class="toast-container position-fixed bottom-0 end-0 p-3">
-
-                @if (TempData["JobEditedMessage"] != null)
-                {
-                    <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
-                        <div class="d-flex">
-                            <div class="toast-body">
-                                @TempData["JobEditedMessage"]
-                            </div>
-                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            @if (TempData["JobEditedMessage"] != null)
+            {
+                <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            @TempData["JobEditedMessage"]
                         </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
-                }
-            </div>
-        </div>
-    }
+                </div>
+            }
 
-    @if (TempData["JobDeletedMessage"] != null)
-    {
-        <div aria-live="polite" aria-atomic="true" class="position-relative">
-            <div class="toast-container position-fixed bottom-0 end-0 p-3">
-
-                @if (TempData["JobDeletedMessage"] != null)
-                {
-                    <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
-                        <div class="d-flex">
-                            <div class="toast-body">
-                                @TempData["JobDeletedMessage"]
-                            </div>
-                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            @if (TempData["JobDeletedMessage"] != null)
+            {
+                <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            @TempData["JobDeletedMessage"]
                         </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
-                }
-            </div>
+                </div>
+            }
         </div>
-    }
-
+    </div>
 }
 
+@* Notes Modal Structure *@
+<div class="modal fade" id="notesModal" tabindex="-1" aria-labelledby="notesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notesModalLabel">Job Application Notes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+            var toastList = toastElList.map(function (toastEl) {
+                return new bootstrap.Toast(toastEl)
+            })
 
+            toastList.forEach(toast => toast.show());
 
+            var notesModal = document.getElementById('notesModal');
+            notesModal.addEventListener('show.bs.modal', function (event) {
 
+                var button = event.relatedTarget;
+
+                var noteContent = button.getAttribute('data-note-content');
+
+                var modalBody = notesModal.querySelector('.modal-body');
+                modalBody.textContent = noteContent || "No notes available."; 
+            });
+        });
+    </script>
+}
