@@ -7,60 +7,60 @@
 
 <h2>Edit Job Application</h2>
 
-<div class="mb-5">
-    <form asp-action="Edit" method="post">
-        <input type="hidden" asp-for="id" />
-        <input type="hidden" asp-for="userId" />
-        <input type="hidden" asp-for="appliedTime" />
+<div class="row">
+    <div class="col-md">
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="id" />
+            <input type="hidden" asp-for="userId" />
 
+            <div class="form-group mb-2">
+                <label asp-for="companyName">Company Name <span class="required-star">*</span></label>
+                <input asp-for="companyName" class="form-control" />
+                <span asp-validation-for="companyName" class="text-danger"></span>
+            </div>
 
-        <div class="form-group">
-            <label asp-for="companyName"></label>
-            <input asp-for="companyName" class="form-control" />
-            <span asp-validation-for="companyName" class="text-danger"></span>
-        </div>
+            <div class="form-group mb-2">
+                <label asp-for="role">Role <span class="required-star">*</span></label>
+                <input asp-for="role" class="form-control" />
+                <span asp-validation-for="role" class="text-danger"></span>
+            </div>
 
-        <div class="form-group">
-            <label asp-for="role"></label>
-            <input asp-for="role" class="form-control" />
-            <span asp-validation-for="role" class="text-danger"></span>
-        </div>
+            <div class="form-group mb-2">
+                <label asp-for="jobSummary">Job Summary <span class="required-star">*</span></label>
+                <textarea asp-for="jobSummary" class="form-control"></textarea>
+                <span asp-validation-for="jobSummary" class="text-danger"></span>
+            </div>
 
-        <div class="form-group">
-            <label asp-for="jobSummary"></label>
-            <textarea asp-for="jobSummary" class="form-control"></textarea>
-            <span asp-validation-for="jobSummary" class="text-danger"></span>
-        </div>
+            <div class="form-group mb-2">
+                <label asp-for="applicationStatus">Status <span class="required-star">*</span></label>
+                <select asp-for="applicationStatus" asp-items="Html.GetEnumSelectList<ApplicationStatus>()" class="form-control form-select"></select>
+                <span asp-validation-for="applicationStatus" class="text-danger"></span>
+            </div>
 
-        <div class="form-group">
-            <label asp-for="applicationStatus"></label>
-            <select asp-for="applicationStatus" asp-items="Html.GetEnumSelectList<ApplicationStatus>()" class="form-control form-select"></select>
-            <span asp-validation-for="applicationStatus" class="text-danger"></span>
-        </div>
+            <div class="form-group mb-2">
+                <label asp-for="appliedVia">Applied Via <span class="required-star">*</span></label>
+                <select asp-for="appliedVia" asp-items="Html.GetEnumSelectList<AppliedVia>()" class="form-control form-select"></select>
+                <span asp-validation-for="appliedVia" class="text-danger"></span>
+            </div>
 
-        <div class="form-group">
-            <label asp-for="appliedVia"></label>
-            <select asp-for="appliedVia" asp-items="Html.GetEnumSelectList<AppliedVia>()" class="form-control form-select"></select>
-            <span asp-validation-for="appliedVia" class="text-danger"></span>
-        </div>
+            <div class="form-group col-md-3 mb-2">
+                <label>Update Time <span class="required-star">*</span></label>
+                <input asp-for="appliedTime" type="date" class="form-control" />
+                <span asp-validation-for="appliedTime" class="text-danger"></span>
+            </div>
 
-        <div class="form-group col-md-2">
-            <label>Update Time</label>
-            <input  asp-for="appliedTime" type="date" class="form-control" />
-            <span asp-validation-for="appliedTime" class="text-danger"></span>
-        </div>
+            <div class="form-group mb-2">
+                <label asp-for="notes">Notes</label>
+                <textarea asp-for="notes" class="form-control"></textarea>
+                <span asp-validation-for="notes" class="text-danger"></span>
+            </div>
 
-        <div class="form-group">
-            <label asp-for="notes"></label>
-            <textarea asp-for="notes" class="form-control"></textarea>
-            <span asp-validation-for="notes" class="text-danger"></span>
-        </div>
-
-        <div class="mt-2">
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-        </div>
-    </form>
+            <div class="my-4 mb-5">
+                <button type="submit" class="btn btn-primary btn-md me-2">Save Changes</button>
+                <a asp-action="Index" class="btn btn-outline-secondary btn-md">Cancel</a>
+            </div>
+        </form>
+    </div>
 </div>
 
 
