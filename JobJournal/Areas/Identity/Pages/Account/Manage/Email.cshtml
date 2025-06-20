@@ -1,0 +1,39 @@
+﻿@page
+@using JobJournal.Areas.Identity.Pages.Account.Manage
+@model EmailModel
+@{
+    ViewData["Title"] = "Manage Email";
+    ViewData["ActivePage"] = ManageNavPages.Email; // Sets the active link in the sidebar
+}
+
+<h3>@ViewData["Title"]</h3>
+<partial name="_StatusMessage" model="Model.StatusMessage" /> @* Displays success/error messages *@
+<div class="row">
+    <div class="col-md-6">
+        <form id="email-form" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div> @* Displays all model validation errors *@
+            <div class="form-floating mb-3">
+                <input asp-for="Email" class="form-control" disabled /> @* Displays current email, disabled for direct editing *@
+                <label asp-for="Email" class="form-label"></label>
+            </div>
+            @if (Model.IsEmailConfirmed)
+            {
+                <div class="form-floating mb-3">
+                    @* Using form-floating for new email input for consistency *@
+                    <input asp-for="Input.NewEmail" class="form-control" autocomplete="email" aria-required="true" placeholder="Please enter your new email." />
+                    <label asp-for="Input.NewEmail" class="form-label"></label>
+                    <span asp-validation-for="Input.NewEmail" class="text-danger"></span> @* Displays validation errors for new email *@
+                </div>
+                <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="w-100 btn btn-lg btn-primary">Change email</button> @* Styled as a prominent button *@
+            }
+            else
+            {
+                <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="w-100 btn btn-lg btn-secondary">Send verification email</button> @* Styled as a prominent button *@
+            }
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" /> @* Includes client-side validation scripts *@
+}

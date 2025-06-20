@@ -1,0 +1,15 @@
+﻿@page
+@model ConfirmEmailChangeModel
+@{
+    // Sets the title for the browser tab
+    ViewData["Title"] = "Confirm email change";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <p>
+        @* Displays the status message (success/error) from the code-behind *@
+        @Model.StatusMessage
+    </p>
+</div>
