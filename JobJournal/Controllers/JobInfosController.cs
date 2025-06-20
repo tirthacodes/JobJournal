@@ -31,31 +31,34 @@ namespace JobJournal.Controllers
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                jobInfos = jobInfos.Where(j => j.companyName.Contains(searchTerm) || j.role.Contains(searchTerm));
+                jobInfos = jobInfos.Where(j => j.companyName.ToLower().Contains(searchTerm.ToLower())
+                                            || j.role.ToLower().Contains(searchTerm.ToLower())
+                                            || (j.jobSummary != null && j.jobSummary.ToLower().Contains(searchTerm.ToLower()))
+                                            || (j.notes != null && j.notes.ToLower().Contains(searchTerm.ToLower())));
+
                 ViewData["CurrentFilter"] = searchTerm;
             }
 
             if (statusFilter.HasValue)
             {
                 jobInfos = jobInfos.Where(j => j.applicationStatus == statusFilter.Value);
-                ViewData["CurrentStatusFilter"] = statusFilter.Value.ToString();
+                ViewData["CurrentStatusFilter"] = statusFilter.Value.ToString(); 
             }
 
             var interviewJobs = jobInfos
                 .Where(j => j.applicationStatus == ApplicationStatus.InterviewScheduled)
-                .OrderBy(j => j.appliedTime)
-                .AsEnumerable();
+                .OrderBy(j => j.appliedTime) 
+                .AsEnumerable(); 
 
             var otherJobs = jobInfos
                 .Where(j => j.applicationStatus != ApplicationStatus.InterviewScheduled)
-                .OrderByDescending(j => j.appliedTime)
-                .AsEnumerable();
+                .OrderByDescending(j => j.appliedTime) 
+                .AsEnumerable(); 
 
             var sortedJobInfos = interviewJobs.Concat(otherJobs);
 
             return View(await Task.FromResult(sortedJobInfos));
         }
-
 
 
 
