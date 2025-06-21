@@ -52,21 +52,31 @@
                         <td>@job.companyName</td>
                         <td>@job.role</td>
                         <td>
+                            @{
+                                bool shouldShowMoreButton = (job.jobSummary != null && job.jobSummary.Length > 50) || !string.IsNullOrEmpty(job.image);
+                            }
+
                             @if (job.jobSummary != null && job.jobSummary.Length > 50)
                             {
                                 <span>@job.jobSummary.Substring(0, 40)...</span>
+                            }
+                            else
+                            {
+                                <span>@job.jobSummary</span>
+                            }
+
+                            @if (shouldShowMoreButton)
+                            {
                                 <button type="button"
                                         class="btn btn-link btn-sm p-0 ms-1 show-more-summary"
                                         data-bs-toggle="modal"
                                         data-bs-target="#notesModal"
                                         data-full-summary="@job.jobSummary"
-                                        data-modal-title="Job Application Summary"  style="vertical-align: baseline;">
+                                        data-image-src="@job.image"
+                                        data-modal-title="Job Application Summary"
+                                        data-modal-type="summary" style="vertical-align: baseline;">
                                     Show more
                                 </button>
-                            }
-                            else
-                            {
-                                @job.jobSummary
                             }
                         </td>
                         <td>
@@ -91,7 +101,8 @@
                                     data-bs-toggle="modal"
                                     data-bs-target="#notesModal"
                                     data-note-content="@job.notes"
-                                    data-modal-title="Job Application Notes">
+                                    data-modal-title="Job Application Notes"
+                                    data-modal-type="notes">
                                 <i class="bi bi-chat-text chat-icon-xs"></i>
                             </button>
                         </td>
@@ -168,10 +179,18 @@ else
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="notesModalLabel">Job Application Notes</h5>
+                <h5 class="modal-title" id="notesModalLabel">Job Application Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div id="modalSummaryContent" class="mb-3"></div>
+                <div id="modalNotesContent" class="mb-3"></div>
+                <div id="modalImageContainer" style="display: none;">
+                    <h6 class="mb-2">Attached Image</h6>
+                    <div class="card p-2" style="max-width: 250px; max-height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                        <img id="modalImagePreview" src="" alt="Attached Image" class="img-fluid" style="object-fit: contain; width: 100%; height: 100%;" />
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -180,32 +199,52 @@ else
     </div>
 </div>
 
+
+
 @section Scripts {
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var toastElList = [].slice.call(document.querySelectorAll('.toast'))
-            var toastList = toastElList.map(function (toastEl) {
-                return new bootstrap.Toast(toastEl)
-            })
-
+            var toastElList = document.querySelectorAll('.toast');
+            var toastList = Array.from(toastElList).map(function (toastEl) {
+                return new bootstrap.Toast(toastEl);
+            });
             toastList.forEach(toast => toast.show());
 
             var notesModal = document.getElementById('notesModal');
             notesModal.addEventListener('show.bs.modal', function (event) {
-
                 var button = event.relatedTarget;
-
-                var contentToDisplay = button.getAttribute('data-full-summary') || button.getAttribute('data-note-content');
+                var modalType = button.getAttribute('data-modal-type');
+                var desiredTitle = button.getAttribute('data-modal-title') || 'Details';
 
                 var modalTitle = notesModal.querySelector('.modal-title');
-                var desiredTitle = button.getAttribute('data-modal-title') || 'Details';
-                modalTitle.textContent = desiredTitle;
+                var modalSummaryContent = document.getElementById('modalSummaryContent');
+                var modalNotesContent = document.getElementById('modalNotesContent');
+                var modalImageContainer = document.getElementById('modalImageContainer');
+                var modalImagePreview = document.getElementById('modalImagePreview');
 
-                var modalBody = notesModal.querySelector('.modal-body');
-                modalBody.textContent = contentToDisplay || "No content available.";
+                modalTitle.textContent = desiredTitle;
+                modalSummaryContent.textContent = '';
+                modalNotesContent.textContent = '';
+                modalImageContainer.style.display = 'none';
+                modalImagePreview.src = '';
+
+                if (modalType === 'summary') {
+                    var fullSummary = button.getAttribute('data-full-summary');
+                    var imageSrc = button.getAttribute('data-image-src');
+
+                    modalSummaryContent.textContent = fullSummary || "No summary available.";
+
+                    if (imageSrc && imageSrc !== '') {
+                        modalImagePreview.src = imageSrc;
+                        modalImageContainer.style.display = 'block';
+                    }
+                } else if (modalType === 'notes') {
+                    var noteContent = button.getAttribute('data-note-content');
+                    modalNotesContent.textContent = noteContent || "No notes available.";
+                }
             });
         });
     </script>
