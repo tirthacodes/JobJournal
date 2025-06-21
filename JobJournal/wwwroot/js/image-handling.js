@@ -16,13 +16,20 @@
             const clearButton = document.getElementById('clearImageButton');
             const pasteAreaText = document.getElementById('pasteAreaText');
 
-            function displayImage(src) {
-                imagePreview.src = src;
-                imagePreview.style.display = 'block';
-                hiddenInput.value = src;
-                clearButton.style.display = 'block';
-                pasteAreaText.style.display = 'none';
-                pasteArea.style.border = '1px solid #dee2e6';
+            function displayImage(base64String) {
+                if (base64String) {
+                    imagePreview.src = base64String;
+                    imagePreview.style.display = 'block';
+                    pasteAreaText.style.display = 'none';
+                    clearImageButton.style.display = 'inline-block';
+                    imageHidden.value = base64String;
+                } else {
+                    imagePreview.src = '#';
+                    imagePreview.style.display = 'none';
+                    pasteAreaText.style.display = 'block';
+                    clearImageButton.style.display = 'none';
+                    imageHidden.value = '';
+                }
             }
 
             function clearImage() {

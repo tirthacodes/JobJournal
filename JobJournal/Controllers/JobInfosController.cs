@@ -18,6 +18,13 @@ namespace JobJournal.Controllers
         private readonly UserManager<IdentityUser> _userManager;
 
 
+
+        private bool JobInfoExists(int id)
+        {
+            return _context.JobInfos.Any(e => e.id == id);
+        }
+
+
         public JobInfosController(AppDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
@@ -93,16 +100,16 @@ namespace JobJournal.Controllers
 
 
 
-        //Get Edit request
+        // GET: JobInfos/Edit/1
         public async Task<IActionResult> Edit(int id)
         {
-            if(id == null)
+            if (id == 0) 
             {
                 return NotFound();
             }
 
             var jobInfo = await _context.JobInfos.FindAsync(id);
-            if(jobInfo == null)
+            if (jobInfo == null)
             {
                 return NotFound();
             }
@@ -110,14 +117,15 @@ namespace JobJournal.Controllers
             return View(jobInfo);
         }
 
-
         // POST: JobInfos/Edit/1
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, JobInfo jobInfo)
+        public async Task<IActionResult> Edit(int id, [Bind("id,companyName,role,jobSummary,applicationStatus,appliedVia,appliedTime,notes,image")] JobInfo jobInfo)
         {
             if (id != jobInfo.id)
+            {
                 return NotFound();
+            }
 
             if (!ModelState.IsValid)
             {
@@ -127,16 +135,34 @@ namespace JobJournal.Controllers
 
             try
             {
-                _context.Update(jobInfo);
+                var existingJobInfo = await _context.JobInfos.AsNoTracking().FirstOrDefaultAsync(m => m.id == id);
+
+                if (existingJobInfo == null)
+                {
+                    return NotFound();
+                }
+
+                if (string.IsNullOrEmpty(jobInfo.image) && !string.IsNullOrEmpty(existingJobInfo.image))
+                {
+                    jobInfo.image = existingJobInfo.image;
+                }
+
+                jobInfo.userId = existingJobInfo.userId;
+
+                _context.Update(jobInfo); 
                 await _context.SaveChangesAsync();
-                TempData["JobEditedMessage"] = "Job application edited successfully!";
+                TempData["JobEditedMessage"] = "Job application updated successfully!";
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.JobInfos.Any(e => e.id == id))
+                if (!JobInfoExists(jobInfo.id))
+                {
                     return NotFound();
+                }
                 else
+                {
                     throw;
+                }
             }
             return RedirectToAction(nameof(Index));
         }
