@@ -27,6 +27,10 @@ namespace JobJournal.Models
         [Display(Name ="Job Summary")]
         public string jobSummary { get; set; }
 
+        [ValidateNever]
+        [Display(Name ="Image")]
+        public string? image { get; set; }
+
         [Required]
         [Display(Name ="Application Status")]
         public ApplicationStatus applicationStatus { get; set; }
