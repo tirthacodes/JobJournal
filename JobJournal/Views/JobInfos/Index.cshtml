@@ -51,7 +51,24 @@
                     <tr>
                         <td>@job.companyName</td>
                         <td>@job.role</td>
-                        <td>@job.jobSummary</td>
+                        <td>
+                            @if (job.jobSummary != null && job.jobSummary.Length > 50)
+                            {
+                                <span>@job.jobSummary.Substring(0, 40)...</span>
+                                <button type="button"
+                                        class="btn btn-link btn-sm p-0 ms-1 show-more-summary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#notesModal"
+                                        data-full-summary="@job.jobSummary"
+                                        data-modal-title="Job Application Summary"  style="vertical-align: baseline;">
+                                    Show more
+                                </button>
+                            }
+                            else
+                            {
+                                @job.jobSummary
+                            }
+                        </td>
                         <td>
                             <span class="status-@job.applicationStatus.ToString() px-2 py-1 rounded">
                                 @job.applicationStatus
@@ -73,7 +90,8 @@
                                     title="View Notes"
                                     data-bs-toggle="modal"
                                     data-bs-target="#notesModal"
-                                    data-note-content="@job.notes">
+                                    data-note-content="@job.notes"
+                                    data-modal-title="Job Application Notes">
                                 <i class="bi bi-chat-text chat-icon-xs"></i>
                             </button>
                         </td>
@@ -180,10 +198,14 @@ else
 
                 var button = event.relatedTarget;
 
-                var noteContent = button.getAttribute('data-note-content');
+                var contentToDisplay = button.getAttribute('data-full-summary') || button.getAttribute('data-note-content');
+
+                var modalTitle = notesModal.querySelector('.modal-title');
+                var desiredTitle = button.getAttribute('data-modal-title') || 'Details';
+                modalTitle.textContent = desiredTitle;
 
                 var modalBody = notesModal.querySelector('.modal-body');
-                modalBody.textContent = noteContent || "No notes available.";
+                modalBody.textContent = contentToDisplay || "No content available.";
             });
         });
     </script>

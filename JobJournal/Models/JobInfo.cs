@@ -23,6 +23,8 @@ namespace JobJournal.Models
         public string role { get; set; }
 
         [Required]
+        [StringLength(maximumLength:200)]
+        [Display(Name ="Job Summary")]
         public string jobSummary { get; set; }
 
         [Required]
@@ -33,7 +35,7 @@ namespace JobJournal.Models
         public AppliedVia appliedVia { get; set; }
 
         [ValidateNever]
-        [StringLength(maximumLength:20)]
+        [StringLength(maximumLength:150)]
         public string? notes { get; set; }
 
         [DataType(DataType.Date)]
