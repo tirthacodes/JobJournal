@@ -1,5 +1,6 @@
 ﻿@using JobJournal.Data.Enums
-@model JobInfo
+@using JobJournal.Models
+@model JobJournal.Models.JobInfo
 
 @{
     ViewData["Title"] = "Edit Job Application";
@@ -9,7 +10,7 @@
 
 <div class="row">
     <div class="col-md">
-        <form asp-action="Edit" method="post">
+        <form asp-action="Edit" method="post" id="editForm">
             <input type="hidden" asp-for="id" />
             <input type="hidden" asp-for="userId" />
 
@@ -44,7 +45,7 @@
             </div>
 
             <div class="form-group col-md-3 mb-2">
-                <label>Update Time <span class="required-star">*</span></label>
+                <label asp-for="appliedTime">Update Time <span class="required-star">*</span></label>
                 <input asp-for="appliedTime" type="date" class="form-control" />
                 <span asp-validation-for="appliedTime" class="text-danger"></span>
             </div>
@@ -56,46 +57,22 @@
             </div>
 
             <div class="form-group mb-2">
-                <label>Attached Image (Optional)</label>
+                <label>Attached Images (Optional - Up to 5)</label>
 
-                <div class="d-flex align-items-center mb-2">
-                    <div class="card image-paste-area"
-                         style="width: 150px; height: 100px; 
-                    border: 2px dashed #ccc;
-                    display: flex; align-items: center; justify-content: center;
-                    overflow: hidden;
-                    position: relative; cursor: pointer;">
-                        @if (!string.IsNullOrEmpty(Model.image))
-                        {
-                            <img id="imagePreview" src="@Model.image" alt="Current Image"
-                                 style="max-width: 100%; max-height: 100%; object-fit: contain;" />
-                            <p class="text-muted text-center mb-0 small d-none" id="pasteAreaText">Image</p>
-                        }
-                        else
-                        {
-                            <img id="imagePreview" src="" alt="Image Preview"
-                                 style="max-width: 100%; max-height: 100%; object-fit: contain; display: none;" />
-                            <p class="text-muted text-center mb-0 small" id="pasteAreaText">Image</p>
-                        }
-                    </div>
-                    <button type="button" id="clearImageButton" class="btn btn-sm btn-outline-danger ms-2"
-                            style="@(string.IsNullOrEmpty(Model.image) ? "display: none;" : "display: inline-block;")">
-                        Clear Image
-                    </button>
+                <div id="imagePreviewsContainer" class="d-flex flex-wrap gap-3 mb-3">
                 </div>
 
-                <input type="hidden" asp-for="image" id="imageHidden" />
-
-                <div class="row g-2 align-items-center">
-                    <div class="col-md-4">
-                        <input type="url" class="form-control form-control-sm" id="imageUrl" placeholder="Optional: Enter image URL">
+                <div class="row g-2 align-items-center mb-2">
+                    <div class="col-md-6">
+                        <input type="url" class="form-control form-control-sm" id="imageUrlInput" placeholder="Optional: Enter image URL">
                     </div>
                     <div class="col-md-6 d-flex gap-2">
-                        <button type="button" class="btn btn-outline-secondary btn-sm" id="uploadImageButton">Upload Image</button>
-                        <input type="file" id="imageUpload" accept="image/*" style="display: none;" />
-                        <button type="button" class="btn btn-outline-info btn-sm" id="pasteImageButton">Paste Image</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="uploadImageButton">Upload File</button>
+                        <input type="file" id="imageUploadInput" accept="image/*" style="display: none;" />
+                        <button type="button" class="btn btn-outline-info btn-sm" id="pasteImageButton">Paste from Clipboard</button>
                     </div>
                 </div>
+                <p id="imageError" class="text-danger mt-2" style="display: none;"></p>
             </div>
 
             <div class="my-4 mb-5">
@@ -106,13 +83,10 @@
     </div>
 </div>
 
-
-
-@if (TempData["JobEditFailedMessage"] != null)
+@if (TempData["JobEditFailedMessage"] != null || TempData["JobEditSuccessMessage"] != null)
 {
     <div aria-live="polite" aria-atomic="true" class="position-relative">
         <div class="toast-container position-fixed bottom-0 end-0 p-3">
-
             @if (TempData["JobEditFailedMessage"] != null)
             {
                 <div class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
@@ -124,96 +98,283 @@
                     </div>
                 </div>
             }
-
+            @if (TempData["JobEditSuccessMessage"] != null)
+            {
+                <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            @TempData["JobEditSuccessMessage"]
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            }
         </div>
     </div>
-
 }
-
-
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <div id="existingImageDataSource" style="display: none;">
+        @if (Model.Images != null)
+        {
+            foreach (var img in Model.Images)
+            {
+                <div class="image-data-item"
+                     data-id="@img.Id"
+                     data-imagedata="@(img.ImageData ?? "")"
+                     data-filename="@img.FileName"
+                     data-contenttype="@img.ContentType">
+                </div>
+            }
+        }
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const imageUpload = document.getElementById('imageUpload');
-            const imageUrl = document.getElementById('imageUrl');
-            const pasteImageButton = document.getElementById('pasteImageButton');
-            const uploadImageButton = document.getElementById('uploadImageButton');
-            const imagePreview = document.getElementById('imagePreview');
-            const imageHidden = document.getElementById('imageHidden');
-            const clearImageButton = document.getElementById('clearImageButton');
+            const MAX_IMAGES = 5;
 
-            function displayImage(base64String) {
-                if (base64String) {
-                    imagePreview.src = base64String;
-                    imagePreview.classList.remove('d-none');
-                    clearImageButton.classList.remove('d-none');
-                    imageHidden.value = base64String;
+            const imagePreviewsContainer = document.getElementById('imagePreviewsContainer');
+            const imageUrlInput = document.getElementById('imageUrlInput');
+            const uploadImageButton = document.getElementById('uploadImageButton');
+            const imageUploadInput = document.getElementById('imageUploadInput');
+            const pasteImageButton = document.getElementById('pasteImageButton');
+            const imageError = document.getElementById('imageError');
+            const form = document.getElementById('editForm');
+
+            let currentImages = [];
+
+            function showMessage(message, isError = false) {
+                imageError.textContent = message;
+                imageError.style.display = isError ? 'block' : 'none';
+            }
+
+            function renderImages() {
+                console.log("renderImages: currentImages before rendering:", currentImages);
+                imagePreviewsContainer.innerHTML = '';
+
+                currentImages.forEach((img, index) => {
+                    const card = document.createElement('div');
+                    card.classList.add('card', 'image-preview-card');
+                    card.style.width = '150px';
+                    card.style.height = '100px';
+                    card.style.position = 'relative';
+                    card.style.overflow = 'hidden';
+                    card.style.border = '1px solid #ddd';
+                    card.style.flexShrink = '0';
+
+                    const imgElement = document.createElement('img');
+                    imgElement.src = img.data;
+                    imgElement.alt = img.fileName;
+                    imgElement.style.maxWidth = '100%';
+                    imgElement.style.maxHeight = '100%';
+                    imgElement.style.objectFit = 'contain';
+                    imgElement.classList.add('p-1');
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.classList.add('btn', 'btn-danger', 'btn-sm', 'position-absolute', 'top-0', 'end-0');
+                    deleteButton.style.zIndex = '10';
+                    deleteButton.style.borderRadius = '0 0 0 5px';
+                    deleteButton.innerHTML = '&times;';
+                    deleteButton.title = 'Remove image';
+                    deleteButton.addEventListener('click', () => removeImage(index));
+
+                    card.appendChild(imgElement);
+                    card.appendChild(deleteButton);
+                    imagePreviewsContainer.appendChild(card);
+                });
+
+                const currentImageCount = currentImages.length;
+                if (currentImageCount >= MAX_IMAGES) {
+                    imageUrlInput.disabled = true;
+                    uploadImageButton.disabled = true;
+                    imageUploadInput.disabled = true;
+                    pasteImageButton.disabled = true;
+                    showMessage(`Maximum of ${MAX_IMAGES} images reached. Remove an image to add more.`, true);
                 } else {
-                    imagePreview.src = '';
-                    imagePreview.classList.add('d-none');
-                    clearImageButton.classList.add('d-none');
-                    imageHidden.value = '';
+                    imageUrlInput.disabled = false;
+                    uploadImageButton.disabled = false;
+                    imageUploadInput.disabled = false;
+                    pasteImageButton.disabled = false;
+                    showMessage('');
+                }
+
+                imageUrlInput.value = '';
+                imageUploadInput.value = '';
+            }
+
+            function addImage(imageData, fileName, contentType, id = 0) {
+                console.log("addImage: Received imageData:", imageData ? imageData.substring(0, 100) + '...' : 'null', "fileName:", fileName, "id:", id);
+                if (currentImages.length >= MAX_IMAGES) {
+                    showMessage(`Cannot add more than ${MAX_IMAGES} images.`, true);
+                    return;
+                }
+                const isDuplicate = currentImages.some(img =>
+                    (id !== 0 && img.id === id) ||
+                    (id === 0 && img.data === imageData)
+                );
+
+                if (isDuplicate) {
+                    showMessage('This image has already been added.', true);
+                    return;
+                }
+
+                currentImages.push({
+                    id: id,
+                    data: imageData,
+                    fileName: fileName,
+                    contentType: contentType
+                });
+                renderImages();
+            }
+
+            function removeImage(index) {
+                if (index >= 0 && index < currentImages.length) {
+                    currentImages.splice(index, 1);
+                    renderImages();
                 }
             }
 
-            displayImage(imageHidden.value);
-
-            imageUpload.addEventListener('change', function (event) {
-                const file = event.target.files[0];
+            imageUploadInput.addEventListener('change', function () {
+                const file = this.files[0];
                 if (file) {
                     const reader = new FileReader();
                     reader.onload = function (e) {
-                        displayImage(e.target.result);
+                        addImage(e.target.result, file.name, file.type);
                     };
                     reader.readAsDataURL(file);
-                    imageUrl.value = '';
                 }
             });
 
-            pasteImageButton.addEventListener('click', async function () {
+            uploadImageButton.addEventListener('click', () => {
+                imageUploadInput.click();
+            });
+
+            pasteImageButton.addEventListener('click', async () => {
                 try {
                     const clipboardItems = await navigator.clipboard.read();
+                    let imageFound = false;
+
                     for (const clipboardItem of clipboardItems) {
                         for (const type of clipboardItem.types) {
                             if (type.startsWith('image/')) {
                                 const blob = await clipboardItem.getType(type);
-                                const reader = new FileReader();
-                                reader.onload = function (e) {
-                                    displayImage(e.target.result);
-                                };
-                                reader.readAsDataURL(blob);
-                                imageUrl.value = '';
-                                return;
+                                if (blob) {
+                                    const reader = new FileReader();
+                                    reader.onload = function (e) {
+                                        addImage(e.target.result, blob.name || `pasted_image_${Date.now()}.png`, blob.type || 'image/png');
+                                    };
+                                    reader.readAsDataURL(blob);
+                                    imageFound = true;
+                                    break;
+                                }
                             }
                         }
+                        if (imageFound) break;
                     }
-                    alert('No image found in clipboard.');
+
+                    if (!imageFound) {
+                        showMessage('No image data found in clipboard. Please copy an image and try again. (May require browser permission)', true);
+                    }
                 } catch (err) {
-                    console.error('Failed to read clipboard contents: ', err);
-                    alert('Failed to read clipboard. Please ensure you have granted clipboard permissions.');
+                    showMessage('Permission to access clipboard denied or blocked by browser. Please ensure you allow clipboard access.', true);
                 }
             });
 
-            uploadImageButton.addEventListener('click', function () {
-                imageUpload.click();
-            });
-
-            imageUrl.addEventListener('input', function () {
-                if (imageUrl.value.startsWith('data:image/') || imageUrl.value.startsWith('http://') || imageUrl.value.startsWith('https://')) {
-                    displayImage(imageUrl.value);
-                } else if (imageUrl.value === '') {
-                    displayImage('');
+            imageUrlInput.addEventListener('change', function () {
+                const url = this.value.trim();
+                if (url) {
+                    try {
+                        new URL(url);
+                        fetch(url)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error(`HTTP error! status: ${response.status}`);
+                                }
+                                return response.blob();
+                            })
+                            .then(blob => {
+                                const reader = new FileReader();
+                                reader.onload = function (e) {
+                                    const fileName = url.substring(url.lastIndexOf('/') + 1).split('?')[0].split('#')[0] || `url_image_${Date.now()}.png`;
+                                    addImage(e.target.result, fileName, blob.type || 'application/octet-stream');
+                                };
+                                reader.readAsDataURL(blob);
+                            })
+                            .catch(error => {
+                                showMessage('Failed to load image from URL. Ensure it\'s a valid image URL and consider CORS policies on the image source server.', true);
+                            });
+                    } catch (e) {
+                        showMessage('Please enter a valid image URL.', true);
+                    }
                 }
             });
 
-            clearImageButton.addEventListener('click', function () {
-                displayImage('');
-                imageUpload.value = '';
-                imageUrl.value = '';
+            form.addEventListener('submit', function (e) {
+                document.querySelectorAll('input[name^="Images["]').forEach(input => input.remove());
+
+                currentImages.forEach((img, index) => {
+                    const idInput = document.createElement('input');
+                    idInput.type = 'hidden';
+                    idInput.name = `Images[${index}].Id`;
+                    idInput.value = img.id || 0;
+                    form.appendChild(idInput);
+
+                    const imageDataInput = document.createElement('input');
+                    imageDataInput.type = 'hidden';
+                    imageDataInput.name = `Images[${index}].ImageData`;
+                    imageDataInput.value = img.data.split(',')[1];
+                    form.appendChild(imageDataInput);
+
+                    const fileNameInput = document.createElement('input');
+                    fileNameInput.type = 'hidden';
+                    fileNameInput.name = `Images[${index}].FileName`;
+                    fileNameInput.value = img.fileName;
+                    form.appendChild(fileNameInput);
+
+                    const contentTypeInput = document.createElement('input');
+                    contentTypeInput.type = 'hidden';
+                    contentTypeInput.name = `Images[${index}].ContentType`;
+                    contentTypeInput.value = img.data.substring(img.data.indexOf(':') + 1, img.data.indexOf(';')) || img.contentType;
+                    form.appendChild(contentTypeInput);
+                });
+            });
+
+            function initializeImages() {
+                // Read from the pre-rendered hidden div
+                const existingImageElements = document.getElementById('existingImageDataSource');
+                if (existingImageElements) {
+                    Array.from(existingImageElements.children).forEach(div => {
+                        const id = parseInt(div.dataset.id || '0');
+                        const imageData = div.dataset.imagedata;
+                        const fileName = div.dataset.filename;
+                        const contentType = div.dataset.contenttype;
+                        if (imageData && fileName && contentType) {
+                            // Prepend data URI scheme if it's missing (it should be present from C#)
+                            let displayData = imageData;
+                            if (!displayData.startsWith('data:') && !displayData.startsWith('http')) {
+                                displayData = `data:${contentType};base64,` + imageData;
+                            }
+                            addImage(displayData, fileName, contentType, id);
+                        } else {
+                            console.warn("initializeImages: Skipping image due to missing data attributes:", div.dataset);
+                        }
+                    });
+                }
+
+                console.log("initializeImages: Existing Job Images loaded from server (raw):", currentImages);
+                renderImages();
+            }
+
+            initializeImages();
+
+            const toastElList = [].slice.call(document.querySelectorAll('.toast'));
+            toastElList.map(function (toastEl) {
+                return new bootstrap.Toast(toastEl, { autohide: true }).show();
             });
         });
     </script>

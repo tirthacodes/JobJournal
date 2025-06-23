@@ -17,6 +17,34 @@ namespace JobJournal.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
 
+            modelBuilder.Entity("JobImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ContentType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImageData")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("JobInfoId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JobInfoId");
+
+                    b.ToTable("JobImages");
+                });
+
             modelBuilder.Entity("JobJournal.Models.JobInfo", b =>
                 {
                     b.Property<int>("id")
@@ -35,9 +63,6 @@ namespace JobJournal.Migrations
                     b.Property<string>("companyName")
                         .IsRequired()
                         .HasMaxLength(40)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("image")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("jobSummary")
@@ -257,6 +282,17 @@ namespace JobJournal.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("JobImage", b =>
+                {
+                    b.HasOne("JobJournal.Models.JobInfo", "JobInfo")
+                        .WithMany("Images")
+                        .HasForeignKey("JobInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("JobInfo");
+                });
+
             modelBuilder.Entity("JobJournal.Models.JobInfo", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "user")
@@ -317,6 +353,11 @@ namespace JobJournal.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("JobJournal.Models.JobInfo", b =>
+                {
+                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

@@ -27,9 +27,7 @@ namespace JobJournal.Models
         [Display(Name ="Job Summary")]
         public string jobSummary { get; set; }
 
-        [ValidateNever]
-        [Display(Name ="Image")]
-        public string? image { get; set; }
+        
 
         [Required]
         [Display(Name ="Application Status")]
@@ -51,5 +49,9 @@ namespace JobJournal.Models
         [ValidateNever]
         [ForeignKey("userId")]
         public IdentityUser user { get; set; }
+
+
+        [ValidateNever]
+        public ICollection<JobImage> Images { get; set; } = new List<JobImage>();
     }
 }

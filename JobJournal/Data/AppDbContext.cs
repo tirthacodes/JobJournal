@@ -11,6 +11,7 @@ namespace JobJournal.Data
 
 
         public DbSet<JobInfo> JobInfos { get; set; }
+        public DbSet<JobImage> JobImages { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)

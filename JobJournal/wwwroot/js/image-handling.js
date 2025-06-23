@@ -1,148 +1,186 @@
+document.addEventListener('DOMContentLoaded', function () {
 
-        document.addEventListener('DOMContentLoaded', function () {
-            var toastElList = [].slice.call(document.querySelectorAll('.toast'));
-            var toastList = toastElList.map(function (toastEl) {
-                return new bootstrap.Toast(toastEl);
-            });
-            toastList.forEach(toast => toast.show());
+    const pasteArea = document.querySelector('.image-paste-area');
+    const imagePreview = document.getElementById('imagePreview');
+    const pasteAreaText = document.getElementById('pasteAreaText');
+    const clearImageButton = document.getElementById('clearImageButton');
+    const imageError = document.getElementById('imageError'); 
 
-            const pasteArea = document.querySelector('.image-paste-area');
-            const imageUrlInput = document.getElementById('imageUrlInput');
-            const uploadImageButton = document.getElementById('uploadImageButton');
-            const imageUploadInput = document.getElementById('imageUploadInput');
-            const pasteImageButton = document.getElementById('pasteImageButton');
-            const imagePreview = document.getElementById('imagePreview');
-            const hiddenInput = document.getElementById('imageHidden');
-            const clearButton = document.getElementById('clearImageButton');
-            const pasteAreaText = document.getElementById('pasteAreaText');
 
-            function displayImage(base64String) {
-                if (base64String) {
-                    imagePreview.src = base64String;
-                    imagePreview.style.display = 'block';
-                    pasteAreaText.style.display = 'none';
-                    clearImageButton.style.display = 'inline-block';
-                    imageHidden.value = base64String;
-                } else {
-                    imagePreview.src = '#';
-                    imagePreview.style.display = 'none';
-                    pasteAreaText.style.display = 'block';
-                    clearImageButton.style.display = 'none';
-                    imageHidden.value = '';
-                }
-            }
 
-            function clearImage() {
-                imagePreview.src = '#';
-                imagePreview.style.display = 'none';
-                hiddenInput.value = '';
-                clearButton.style.display = 'none';
-                pasteAreaText.style.display = 'block';
-                imageUrlInput.value = '';
-                imageUploadInput.value = '';
-                pasteArea.style.border = '2px dashed #ccc';
-            }
+    const imageDataHidden = document.getElementById('imageDataHidden');
+    const imageFileNameHidden = document.getElementById('imageFileNameHidden');
+    const imageContentTypeHidden = document.getElementById('imageContentTypeHidden');
 
-            pasteArea.addEventListener('paste', function(event) {
-                event.preventDefault();
 
-                const items = event.clipboardData.items;
-                let imageFound = false;
 
-                for (let i = 0; i < items.length; i++) {
-                    if (items[i].type.startsWith('image/')) {
-                        const file = items[i].getAsFile();
-                        if (file) {
-                            const reader = new FileReader();
-                            reader.onload = function(e) {
-                                displayImage(e.target.result);
-                            };
-                            reader.readAsDataURL(file);
-                            imageFound = true;
-                            return;
-                        }
-                    }
-                }
+    const imageUrlInput = document.getElementById('imageUrlInput');
+    const uploadImageButton = document.getElementById('uploadImageButton');
+    const imageUploadInput = document.getElementById('imageUploadInput'); 
+    const pasteImageButton = document.getElementById('pasteImageButton');
 
-                if (!imageFound) {
-                    alert('No image data found in clipboard. Please copy an actual image (e.g., from a screenshot tool) and try pasting with Ctrl+V.');
-                }
-            });
 
-            pasteImageButton.addEventListener('click', async () => {
-                try {
-                    const clipboardItems = await navigator.clipboard.read();
-                    let imageFoundInClick = false;
+    function showMessage(message, isError = false) {
+        imageError.textContent = message;
+        imageError.style.display = isError ? 'block' : 'none';
+        if (!isError) {
+            console.log(message); 
+        }
+    }
 
-                    for (const clipboardItem of clipboardItems) {
-                        for (const type of clipboardItem.types) {
-                            if (type.startsWith('image/')) {
-                                const blob = await clipboardItem.getType(type);
-                                const reader = new FileReader();
-                                reader.onload = function(e) {
-                                    displayImage(e.target.result);
-                                };
-                                reader.readAsDataURL(blob);
-                                imageFoundInClick = true;
-                                return;
-                            }
-                        }
-                    }
 
-                    if (!imageFoundInClick) {
-                        alert('No image data found in clipboard. Please copy an image and try again. (May require browser permission)');
-                    }
-                } catch (err) {
-                    console.error('Failed to read clipboard contents:', err);
-                    if (err.name === 'NotAllowedError' || err.name === 'SecurityError') {
-                        alert('Permission to access clipboard denied or blocked by browser. Please ensure you allow clipboard access, or use Ctrl+V to paste directly into the box below.');
-                    } else if (err.name === 'AbortError') {
-                        alert('Clipboard read was aborted.');
-                    } else {
-                        alert('Error accessing clipboard: ' + err.message);
-                    }
-                }
-            });
+    function displayImage(src, fileName, contentType) {
+        imagePreview.src = src;
+        imagePreview.style.display = 'block';
+        pasteAreaText.style.display = 'none';
+        clearImageButton.style.display = 'inline-block';
 
-            uploadImageButton.addEventListener('click', () => {
-                imageUploadInput.click();
-            });
+        imageDataHidden.value = src;
+        imageFileNameHidden.value = fileName;
+        imageContentTypeHidden.value = contentType;
+        showMessage(''); 
 
-            imageUploadInput.addEventListener('change', function() {
-                if (this.files.length > 0) {
-                    const file = this.files[0];
+        imageUrlInput.value = '';
+        imageUploadInput.value = '';
+    }
+
+    function clearImage() {
+        imagePreview.src = '';
+        imagePreview.style.display = 'none';
+        pasteAreaText.style.display = 'block';
+        clearImageButton.style.display = 'none';
+
+        imageDataHidden.value = '';
+        imageFileNameHidden.value = '';
+        imageContentTypeHidden.value = '';
+
+        imageUrlInput.value = '';
+        imageUploadInput.value = ''; 
+        showMessage(''); 
+    }
+
+
+    pasteArea.addEventListener('paste', function (e) {
+        e.preventDefault();
+        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+        let imageFound = false;
+
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].type.indexOf('image') !== -1) {
+                const blob = items[i].getAsFile();
+                if (blob) {
                     const reader = new FileReader();
-                    reader.onload = (e) => {
-                        displayImage(e.target.result);
+                    reader.onload = function (event) {
+                        displayImage(event.target.result, blob.name || 'pasted_image.png', blob.type || 'image/png');
                     };
-                    reader.readAsDataURL(file);
+                    reader.readAsDataURL(blob);
+                    imageFound = true;
+                    break;
                 }
-            });
-
-            imageUrlInput.addEventListener('change', function() {
-                const url = this.value.trim();
-                if (url !== '') {
-                    try {
-                        new URL(url);
-                        displayImage(url);
-                    } catch (e) {
-                        alert('Please enter a valid image URL.');
-                        clearImage();
-                    }
-                } else {
-                    if (!hiddenInput.value || hiddenInput.value.startsWith('http') || hiddenInput.value.startsWith('https')) {
-                         clearImage();
-                    }
-                }
-            });
-
-            clearButton.addEventListener('click', clearImage);
-            
-            pasteArea.addEventListener('click', function() {
-                imageUploadInput.click();
-            });
-
-            if (hiddenInput.value && hiddenInput.value !== '') {
-                displayImage(hiddenInput.value);
             }
-        });
+        }
+        if (!imageFound) {
+            showMessage('No image data found in clipboard. Please copy an actual image (e.g., from a screenshot tool) and try pasting with Ctrl+V.', true);
+        }
+    });
+
+
+    pasteArea.addEventListener('click', function () {
+        imageUploadInput.click(); 
+    });
+
+
+
+    uploadImageButton.addEventListener('click', () => {
+        imageUploadInput.click();
+    });
+
+
+    imageUploadInput.addEventListener('change', function () {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                displayImage(e.target.result, file.name, file.type);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            clearImage();
+        }
+    });
+
+
+    pasteImageButton.addEventListener('click', async () => {
+        try {
+            const clipboardItems = await navigator.clipboard.read();
+            let imageFoundInClick = false;
+
+            for (const clipboardItem of clipboardItems) {
+                for (const type of clipboardItem.types) {
+                    if (type.startsWith('image/')) {
+                        const blob = await clipboardItem.getType(type);
+                        if (blob) { 
+                            const reader = new FileReader();
+                            reader.onload = function (e) {
+                                displayImage(e.target.result, blob.name || 'pasted_clipboard_image.png', blob.type || 'image/png');
+                            };
+                            reader.readAsDataURL(blob);
+                            imageFoundInClick = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!imageFoundInClick) {
+                showMessage('No image data found in clipboard. Please copy an image and try again. (May require browser permission)', true);
+            }
+        } catch (err) {
+            console.error('Failed to read clipboard contents:', err);
+            if (err.name === 'NotAllowedError' || err.name === 'SecurityError') {
+                showMessage('Permission to access clipboard denied or blocked by browser. Please ensure you allow clipboard access.', true);
+            } else if (err.name === 'AbortError') {
+                showMessage('Clipboard read was aborted.', true);
+            } else {
+                showMessage('Error accessing clipboard: ' + err.message, true);
+            }
+        }
+    });
+
+    
+    imageUrlInput.addEventListener('change', function () {
+        const url = this.value.trim();
+        if (url !== '') {
+            try {
+                new URL(url); 
+                
+                fetch(url)
+                    .then(response => response.blob())
+                    .then(blob => {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            displayImage(e.target.result, url.substring(url.lastIndexOf('/') + 1) || 'url_image.png', blob.type || 'application/octet-stream');
+                        };
+                        reader.readAsDataURL(blob);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching image from URL:', error);
+                        showMessage('Failed to load image from URL. Please ensure it\'s a valid image URL and consider CORS policies.', true);
+                        clearImage();
+                    });
+
+            } catch (e) {
+                showMessage('Please enter a valid image URL.', true);
+                clearImage();
+            }
+        } else {
+            if (imagePreview.src && (imagePreview.src.startsWith('http://') || imagePreview.src.startsWith('https://'))) {
+                clearImage();
+            }
+        }
+    });
+
+    clearImageButton.addEventListener('click', clearImage);
+
+    clearImage();
+});

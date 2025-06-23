@@ -72,55 +72,82 @@ namespace JobJournal.Controllers
 
 
 
-        //For creating JobInfo
-        // GET
+        // GET: JobInfos/Create
         public IActionResult Create()
         {
             return View();
         }
 
+        // POST: JobInfos/Create
         [HttpPost]
-        public async Task<IActionResult> Create(JobInfo jobInfo)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(
+            [Bind("companyName,role,jobSummary,applicationStatus,appliedVia,appliedTime,notes")] JobInfo jobInfo,
+            string? imageData,      
+            string? imageFileName,  
+            string? imageContentType) 
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            jobInfo.userId = userId;
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                TempData["JobCreationFailedMessage"] = "Job application creation failed!";
-                return View(jobInfo);
+                if (jobInfo.Images == null)
+                {
+                    jobInfo.Images = new List<JobImage>();
+                }
+
+                if (!string.IsNullOrEmpty(imageData))
+                {
+                    var jobImage = new JobImage
+                    {
+                        ImageData = imageData,       
+                        FileName = imageFileName,    
+                        ContentType = imageContentType, 
+                        Order = 0                    
+                    };
+
+                    jobInfo.Images.Add(jobImage);
+                }
+
+                _context.Add(jobInfo); 
+                await _context.SaveChangesAsync(); 
+                TempData["JobCreatedMessage"] = "Job application created successfully!";
+                return RedirectToAction(nameof(Index));
             }
 
-            jobInfo.userId = _userManager.GetUserId(User);
-
-            _context.JobInfos.Add(jobInfo);
-            await _context.SaveChangesAsync();
-            TempData["JobCreatedMessage"] = "Job application saved successfully!";
-            return RedirectToAction(nameof(Index));
+            TempData["JobCreationFailedMessage"] = "Job application creation failed!";
+            return View(jobInfo);
         }
 
 
 
 
-        // GET: JobInfos/Edit/1
-        public async Task<IActionResult> Edit(int id)
+        // GET: JobInfos/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (id == 0) 
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var jobInfo = await _context.JobInfos.FindAsync(id);
+            var jobInfo = await _context.JobInfos
+                                        .Include(j => j.Images) 
+                                        .FirstOrDefaultAsync(m => m.id == id);
+
             if (jobInfo == null)
             {
                 return NotFound();
             }
-
             return View(jobInfo);
         }
 
-        // POST: JobInfos/Edit/1
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,companyName,role,jobSummary,applicationStatus,appliedVia,appliedTime,notes,image")] JobInfo jobInfo)
+        public async Task<IActionResult> Edit(int id, JobInfo jobInfo)
         {
             if (id != jobInfo.id)
             {
@@ -135,21 +162,54 @@ namespace JobJournal.Controllers
 
             try
             {
-                var existingJobInfo = await _context.JobInfos.AsNoTracking().FirstOrDefaultAsync(m => m.id == id);
+                var existingJobInfo = await _context.JobInfos
+                                                        .Include(j => j.Images)
+                                                        .FirstOrDefaultAsync(j => j.id == id);
 
                 if (existingJobInfo == null)
                 {
                     return NotFound();
                 }
 
-                if (string.IsNullOrEmpty(jobInfo.image) && !string.IsNullOrEmpty(existingJobInfo.image))
-                {
-                    jobInfo.image = existingJobInfo.image;
-                }
+                existingJobInfo.companyName = jobInfo.companyName;
+                existingJobInfo.role = jobInfo.role;
+                existingJobInfo.jobSummary = jobInfo.jobSummary;
+                existingJobInfo.applicationStatus = jobInfo.applicationStatus;
+                existingJobInfo.appliedVia = jobInfo.appliedVia;
+                existingJobInfo.appliedTime = jobInfo.appliedTime;
+                existingJobInfo.notes = jobInfo.notes;
 
                 jobInfo.userId = existingJobInfo.userId;
 
-                _context.Update(jobInfo); 
+                var imagesSubmitted = jobInfo.Images?.ToList() ?? new List<JobImage>();
+
+                foreach (var existingImage in existingJobInfo.Images.ToList())
+                {
+                    if (!imagesSubmitted.Any(si => si.Id == existingImage.Id && si.Id != 0))
+                    {
+                        _context.JobImages.Remove(existingImage);
+                    }
+                }
+
+                foreach (var submittedImage in imagesSubmitted)
+                {
+                    if (submittedImage.Id == 0)
+                    {
+                        existingJobInfo.Images.Add(submittedImage);
+                    }
+                    else
+                    {
+                        var imageToUpdate = existingJobInfo.Images.FirstOrDefault(i => i.Id == submittedImage.Id);
+                        if (imageToUpdate != null)
+                        {
+                            imageToUpdate.ImageData = submittedImage.ImageData;
+                            imageToUpdate.FileName = submittedImage.FileName;
+                            imageToUpdate.ContentType = submittedImage.ContentType;
+                        }
+                    }
+                }
+
+                _context.Update(existingJobInfo); 
                 await _context.SaveChangesAsync();
                 TempData["JobEditedMessage"] = "Job application updated successfully!";
             }
@@ -161,11 +221,17 @@ namespace JobJournal.Controllers
                 }
                 else
                 {
+                    TempData["JobEditFailedMessage"] = "Job application Edit Failed!";
                     throw;
                 }
             }
+            catch (Exception)
+            {
+                TempData["JobEditFailedMessage"] = "Job application Edit Failed!";
+            }
             return RedirectToAction(nameof(Index));
         }
+
 
 
 
