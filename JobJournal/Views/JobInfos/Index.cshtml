@@ -1,4 +1,5 @@
 ﻿@using JobJournal.Data.Enums
+@using JobJournal.Models
 @model IEnumerable<JobInfo>
 
 @{
@@ -52,14 +53,7 @@
                         <td>@job.companyName</td>
                         <td>@job.role</td>
                         <td>
-                            @*Temporary Fix*@
-                            @*
-                            @{
-                                bool shouldShowMoreButton = (job.jobSummary != null && job.jobSummary.Length > 50) || !string.IsNullOrEmpty(job.image);
-                            }
-                            *@
-
-                            @if (job.jobSummary != null && job.jobSummary.Length > 50)
+                            @if (job.jobSummary != null && job.jobSummary.Length > 40)
                             {
                                 <span>@job.jobSummary.Substring(0, 40)...</span>
                             }
@@ -68,23 +62,28 @@
                                 <span>@job.jobSummary</span>
                             }
 
+                            @{
+                                bool hasLongSummary = (job.jobSummary != null && job.jobSummary.Length > 40);
+                                // Check if there are any images and if the first image has ImageData
+                                string firstImageData = (job.Images != null && job.Images.Any() && !string.IsNullOrEmpty(job.Images.FirstOrDefault()?.ImageData)) 
+                                    ? job.Images.FirstOrDefault().ImageData 
+                                    : "";
+                                bool hasImage = !string.IsNullOrEmpty(firstImageData);
 
-                            @*Temporary Fix*@
-                            @*
-                            @if (shouldShowMoreButton)
-                            {
-                                <button type="button"
-                                        class="btn btn-link btn-sm p-0 ms-1 show-more-summary"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#notesModal"
-                                        data-full-summary="@job.jobSummary"
-                                        data-image-src="@job.image"
-                                        data-modal-title="Job Application Summary"
-                                        data-modal-type="summary" style="vertical-align: baseline;">
-                                    Show more
-                                </button>
+                                if (hasLongSummary || hasImage)
+                                {
+                                    <button type="button"
+                                            class="btn btn-link btn-sm p-0 ms-1 show-more-summary"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#notesModal"
+                                            data-full-summary="@job.jobSummary"
+                                            data-image-src="@firstImageData" @* Pass the actual Base64 data *@
+                                            data-modal-title="Job Application Summary"
+                                            data-modal-type="summary" style="vertical-align: baseline;">
+                                        Show more
+                                    </button>
+                                }
                             }
-                            *@
                         </td>
                         <td>
                             <span class="status-@job.applicationStatus.ToString() px-2 py-1 rounded">
@@ -235,11 +234,11 @@ else
                 modalSummaryContent.textContent = '';
                 modalNotesContent.textContent = '';
                 modalImageContainer.style.display = 'none';
-                modalImagePreview.src = '';
+                modalImagePreview.src = ''; // Clear previous image
 
                 if (modalType === 'summary') {
                     var fullSummary = button.getAttribute('data-full-summary');
-                    var imageSrc = button.getAttribute('data-image-src');
+                    var imageSrc = button.getAttribute('data-image-src'); // This will now contain Base64 data
 
                     modalSummaryContent.textContent = fullSummary || "No summary available.";
 

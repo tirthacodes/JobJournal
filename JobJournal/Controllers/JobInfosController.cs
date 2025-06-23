@@ -36,7 +36,9 @@ namespace JobJournal.Controllers
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var jobInfos = _context.JobInfos.Where(j => j.userId == currentUserId);
+            var jobInfos = _context.JobInfos
+                                   .Include(j => j.Images)
+                                   .Where(j => j.userId == currentUserId);
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
@@ -51,22 +53,22 @@ namespace JobJournal.Controllers
             if (statusFilter.HasValue)
             {
                 jobInfos = jobInfos.Where(j => j.applicationStatus == statusFilter.Value);
-                ViewData["CurrentStatusFilter"] = statusFilter.Value.ToString(); 
+                ViewData["CurrentStatusFilter"] = statusFilter.Value.ToString();
             }
 
-            var interviewJobs = jobInfos
+            var interviewJobs = await jobInfos
                 .Where(j => j.applicationStatus == ApplicationStatus.InterviewScheduled)
-                .OrderBy(j => j.appliedTime) 
-                .AsEnumerable(); 
+                .OrderBy(j => j.appliedTime)
+                .ToListAsync();
 
-            var otherJobs = jobInfos
+            var otherJobs = await jobInfos
                 .Where(j => j.applicationStatus != ApplicationStatus.InterviewScheduled)
-                .OrderByDescending(j => j.appliedTime) 
-                .AsEnumerable(); 
+                .OrderByDescending(j => j.appliedTime)
+                .ToListAsync();
 
             var sortedJobInfos = interviewJobs.Concat(otherJobs);
 
-            return View(await Task.FromResult(sortedJobInfos));
+            return View(sortedJobInfos);
         }
 
 
