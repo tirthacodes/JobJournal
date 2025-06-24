@@ -15,8 +15,20 @@
         </div>
 
         <div class="col-md-3">
-            <select name="statusFilter" asp-items="Html.GetEnumSelectList<ApplicationStatus>()" class="form-control form-select">
+            <select name="statusFilter" class="form-control form-select">
                 <option value="">All Status</option>
+                @foreach (var status in Enum.GetValues(typeof(ApplicationStatus)))
+                {
+                    var enumStatus = (ApplicationStatus)status;
+                    @if (ViewData["CurrentStatusFilter"] != null && ViewData["CurrentStatusFilter"].ToString() == enumStatus.ToString())
+                    {
+                        <option value="@enumStatus" selected>@enumStatus.ToString()</option>
+                    }
+                    else
+                    {
+                        <option value="@enumStatus">@enumStatus.ToString()</option>
+                    }
+                }
             </select>
         </div>
 
