@@ -283,6 +283,29 @@ else
     </div>
 </div>
 
+@* Fullscreen Image Viewer Modal *@
+<div class="modal fade" id="imageViewerModal" tabindex="-1" aria-labelledby="imageViewerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title" id="imageViewerModalLabel"></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex justify-content-center align-items-center">
+                <img id="fullScreenImage" src="" alt="Full Screen Image" class="img-fluid" style="max-height: 90vh; max-width: 90vw; object-fit: contain;">
+            </div>
+            <div class="modal-footer border-0 pt-0 justify-content-between">
+                <button type="button" id="prevImageBtn" class="btn btn-outline-light">Previous</button>
+                <span id="imageCounter" class="text-white-50"></span>
+                <button type="button" id="nextImageBtn" class="btn btn-outline-light">Next</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 
 
 
@@ -298,6 +321,52 @@ else
             toastList.forEach(toast => toast.show());
 
             var notesModal = document.getElementById('notesModal');
+            var imageViewerModal = document.getElementById('imageViewerModal');
+            var fullScreenImage = document.getElementById('fullScreenImage');
+            var imageViewerModalLabel = document.getElementById('imageViewerModalLabel');
+            var prevImageBtn = document.getElementById('prevImageBtn');
+            var nextImageBtn = document.getElementById('nextImageBtn');
+            var imageCounter = document.getElementById('imageCounter');
+
+            let currentJobImages = [];
+            let currentImageIndex = 0;
+
+            function updateFullScreenImage() {
+                if (currentJobImages.length === 0) {
+                    fullScreenImage.src = '';
+                    imageViewerModalLabel.textContent = 'No Image';
+                    imageCounter.textContent = '';
+                    prevImageBtn.style.display = 'none';
+                    nextImageBtn.style.display = 'none';
+                    return;
+                }
+
+                const img = currentJobImages[currentImageIndex];
+                fullScreenImage.src = img.ImageData;
+                imageViewerModalLabel.textContent = img.FileName || `Image ${currentImageIndex + 1}`;
+                imageCounter.textContent = `${currentImageIndex + 1} of ${currentJobImages.length}`;
+
+                prevImageBtn.disabled = currentImageIndex === 0;
+                nextImageBtn.disabled = currentImageIndex === currentJobImages.length - 1;
+
+                prevImageBtn.style.display = currentJobImages.length > 1 ? 'block' : 'none';
+                nextImageBtn.style.display = currentJobImages.length > 1 ? 'block' : 'none';
+            }
+
+            prevImageBtn.addEventListener('click', function () {
+                if (currentImageIndex > 0) {
+                    currentImageIndex--;
+                    updateFullScreenImage();
+                }
+            });
+
+            nextImageBtn.addEventListener('click', function () {
+                if (currentImageIndex < currentJobImages.length - 1) {
+                    currentImageIndex++;
+                    updateFullScreenImage();
+                }
+            });
+
             notesModal.addEventListener('show.bs.modal', function (event) {
                 var button = event.relatedTarget;
                 var modalType = button.getAttribute('data-modal-type');
@@ -315,6 +384,8 @@ else
                 modalImagesGallery.style.display = 'none';
                 modalImagesWrapper.innerHTML = '';
 
+                currentJobImages = [];
+
                 if (modalType === 'summary') {
                     var fullSummary = button.getAttribute('data-full-summary');
                     var allImagesJson = button.getAttribute('data-all-images-json');
@@ -323,10 +394,11 @@ else
 
                     if (allImagesJson && allImagesJson !== '') {
                         try {
-                            var images = JSON.parse(allImagesJson);
+                            const images = JSON.parse(allImagesJson);
+                            currentJobImages = images;
 
-                            if (images.length > 0) {
-                                images.forEach(function (img) {
+                            if (currentJobImages.length > 0) {
+                                currentJobImages.forEach(function (img, index) {
                                     if (img.ImageData && img.ImageData !== '') {
                                         var imgElement = document.createElement('img');
                                         imgElement.src = img.ImageData;
@@ -335,6 +407,13 @@ else
                                         imgElement.style.maxWidth = '150px';
                                         imgElement.style.maxHeight = '100px';
                                         imgElement.style.objectFit = 'contain';
+                                        imgElement.style.cursor = 'pointer';
+
+                                        imgElement.addEventListener('click', function () {
+                                            currentImageIndex = index;
+                                            const imageViewerBootstrapModal = new bootstrap.Modal(imageViewerModal);
+                                            imageViewerBootstrapModal.show();
+                                        });
 
                                         var imageCard = document.createElement('div');
                                         imageCard.className = 'card p-1';
@@ -354,7 +433,6 @@ else
                                 modalImagesGallery.style.display = 'none';
                             }
                         } catch (e) {
-                            console.error("Failed to parse image JSON:", e);
                             modalImagesGallery.style.display = 'none';
                         }
                     } else {
@@ -365,6 +443,10 @@ else
                     var noteContent = button.getAttribute('data-note-content');
                     modalNotesContent.textContent = noteContent || "No notes available.";
                 }
+            });
+
+            imageViewerModal.addEventListener('show.bs.modal', function (event) {
+                updateFullScreenImage();
             });
         });
     </script>
