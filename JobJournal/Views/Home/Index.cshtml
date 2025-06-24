@@ -9,7 +9,7 @@
     {
         @if (Model.TotalApplications > 0)
         {
-            <p class="lead">Hello @User.Identity.Name, here's your job search snapshot:</p>
+            <p class="lead">Hello @User.Identity.Name.Split('@')[0]! Here's your job search snapshot:</p>
 
             <div class="container mt-5">
                 <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
