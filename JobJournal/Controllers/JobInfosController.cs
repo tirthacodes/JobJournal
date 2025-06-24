@@ -269,7 +269,10 @@ namespace JobJournal.Controllers
                 return NotFound();
             }
 
-            var jobInfo = await _context.JobInfos.FindAsync(id);
+            var jobInfo = await _context.JobInfos
+                                        .Include(j => j.Images) 
+                                        .FirstOrDefaultAsync(m => m.id == id); 
+
             if (jobInfo == null)
             {
                 return NotFound();
@@ -278,11 +281,15 @@ namespace JobJournal.Controllers
             return View(jobInfo);
         }
 
-        //Post Delete
         [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken] 
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var jobInfo = await _context.JobInfos.FindAsync(id);
+            // Also fetching the JobInfo including its related Images
+            var jobInfo = await _context.JobInfos
+                                        .Include(j => j.Images) 
+                                        .FirstOrDefaultAsync(m => m.id == id); 
+
             if (jobInfo != null)
             {
                 _context.JobInfos.Remove(jobInfo);
