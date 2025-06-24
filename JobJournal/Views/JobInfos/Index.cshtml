@@ -1,5 +1,7 @@
-﻿@using JobJournal.Data.Enums
+﻿@using Newtonsoft.Json;
+@using JobJournal.Data.Enums
 @using JobJournal.Models
+@using System.Web;
 @model IEnumerable<JobInfo>
 
 @{
@@ -64,10 +66,9 @@
 
                             @{
                                 bool hasLongSummary = (job.jobSummary != null && job.jobSummary.Length > 40);
-                                // Check if there are any images and if the first image has ImageData
-                                string firstImageData = (job.Images != null && job.Images.Any() && !string.IsNullOrEmpty(job.Images.FirstOrDefault()?.ImageData)) 
-                                    ? job.Images.FirstOrDefault().ImageData 
-                                    : "";
+                                string firstImageData = (job.Images != null && job.Images.Any() && !string.IsNullOrEmpty(job.Images.FirstOrDefault()?.ImageData))
+                                ? job.Images.FirstOrDefault().ImageData
+                                : "";
                                 bool hasImage = !string.IsNullOrEmpty(firstImageData);
 
                                 if (hasLongSummary || hasImage)
@@ -77,7 +78,7 @@
                                             data-bs-toggle="modal"
                                             data-bs-target="#notesModal"
                                             data-full-summary="@job.jobSummary"
-                                            data-image-src="@firstImageData" @* Pass the actual Base64 data *@
+                                            data-all-images-json="@(JsonConvert.SerializeObject((job.Images ?? new List<JobImage>()).Select(i => new { i.ImageData, i.FileName, i.ContentType }).ToList()))"
                                             data-modal-title="Job Application Summary"
                                             data-modal-type="summary" style="vertical-align: baseline;">
                                         Show more
@@ -191,12 +192,13 @@ else
             <div class="modal-body">
                 <div id="modalSummaryContent" class="mb-3"></div>
                 <div id="modalNotesContent" class="mb-3"></div>
-                <div id="modalImageContainer" style="display: none;">
-                    <h6 class="mb-2">Attached Image</h6>
-                    <div class="card p-2" style="max-width: 250px; max-height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
-                        <img id="modalImagePreview" src="" alt="Attached Image" class="img-fluid" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
+
+                <div id="modalImagesGallery" style="display: none;">
+                    <h6 class="mb-2">Attached Images</h6>
+                    <div class="d-flex flex-wrap gap-2 justify-content-center">
                     </div>
                 </div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -204,6 +206,7 @@ else
         </div>
     </div>
 </div>
+
 
 
 
@@ -227,25 +230,61 @@ else
                 var modalTitle = notesModal.querySelector('.modal-title');
                 var modalSummaryContent = document.getElementById('modalSummaryContent');
                 var modalNotesContent = document.getElementById('modalNotesContent');
-                var modalImageContainer = document.getElementById('modalImageContainer');
-                var modalImagePreview = document.getElementById('modalImagePreview');
+                var modalImagesGallery = document.getElementById('modalImagesGallery');
+                var modalImagesWrapper = modalImagesGallery.querySelector('.d-flex');
 
                 modalTitle.textContent = desiredTitle;
                 modalSummaryContent.textContent = '';
                 modalNotesContent.textContent = '';
-                modalImageContainer.style.display = 'none';
-                modalImagePreview.src = ''; // Clear previous image
+                modalImagesGallery.style.display = 'none';
+                modalImagesWrapper.innerHTML = '';
 
                 if (modalType === 'summary') {
                     var fullSummary = button.getAttribute('data-full-summary');
-                    var imageSrc = button.getAttribute('data-image-src'); // This will now contain Base64 data
+                    var allImagesJson = button.getAttribute('data-all-images-json');
 
                     modalSummaryContent.textContent = fullSummary || "No summary available.";
 
-                    if (imageSrc && imageSrc !== '') {
-                        modalImagePreview.src = imageSrc;
-                        modalImageContainer.style.display = 'block';
+                    if (allImagesJson && allImagesJson !== '') {
+                        try {
+                            var images = JSON.parse(allImagesJson);
+
+                            if (images.length > 0) {
+                                images.forEach(function (img) {
+                                    if (img.ImageData && img.ImageData !== '') {
+                                        var imgElement = document.createElement('img');
+                                        imgElement.src = img.ImageData;
+                                        imgElement.alt = img.FileName || 'Attached Image';
+                                        imgElement.className = 'img-fluid m-1';
+                                        imgElement.style.maxWidth = '150px';
+                                        imgElement.style.maxHeight = '100px';
+                                        imgElement.style.objectFit = 'contain';
+
+                                        var imageCard = document.createElement('div');
+                                        imageCard.className = 'card p-1';
+                                        imageCard.style.maxWidth = '160px';
+                                        imageCard.style.maxHeight = '110px';
+                                        imageCard.style.overflow = 'hidden';
+                                        imageCard.style.display = 'flex';
+                                        imageCard.style.alignItems = 'center';
+                                        imageCard.style.justifyContent = 'center';
+                                        imageCard.appendChild(imgElement);
+
+                                        modalImagesWrapper.appendChild(imageCard);
+                                    }
+                                });
+                                modalImagesGallery.style.display = 'block';
+                            } else {
+                                modalImagesGallery.style.display = 'none';
+                            }
+                        } catch (e) {
+                            console.error("Failed to parse image JSON:", e);
+                            modalImagesGallery.style.display = 'none';
+                        }
+                    } else {
+                        modalImagesGallery.style.display = 'none';
                     }
+
                 } else if (modalType === 'notes') {
                     var noteContent = button.getAttribute('data-note-content');
                     modalNotesContent.textContent = noteContent || "No notes available.";

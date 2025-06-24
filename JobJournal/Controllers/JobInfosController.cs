@@ -134,7 +134,7 @@ namespace JobJournal.Controllers
             }
 
             var jobInfo = await _context.JobInfos
-                                        .Include(j => j.Images) 
+                                        .Include(j => j.Images)
                                         .FirstOrDefaultAsync(m => m.id == id);
 
             if (jobInfo == null)
@@ -143,9 +143,6 @@ namespace JobJournal.Controllers
             }
             return View(jobInfo);
         }
-
-
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -156,62 +153,89 @@ namespace JobJournal.Controllers
                 return NotFound();
             }
 
+            var existingJobInfo = await _context.JobInfos
+                                                .Include(j => j.Images)
+                                                .AsNoTracking()
+                                                .FirstOrDefaultAsync(j => j.id == id);
+
+            if (existingJobInfo == null)
+            {
+                return NotFound();
+            }
+
+            existingJobInfo.companyName = jobInfo.companyName;
+            existingJobInfo.role = jobInfo.role;
+            existingJobInfo.jobSummary = jobInfo.jobSummary;
+            existingJobInfo.applicationStatus = jobInfo.applicationStatus;
+            existingJobInfo.appliedVia = jobInfo.appliedVia;
+            existingJobInfo.appliedTime = jobInfo.appliedTime;
+            existingJobInfo.notes = jobInfo.notes;
+
+            _context.Entry(existingJobInfo).State = EntityState.Modified;
+
+            var submittedExistingImageIds = jobInfo.Images?
+                                                .Where(si => si.Id != 0 && !string.IsNullOrEmpty(si.ImageData))
+                                                .Select(si => si.Id)
+                                                .ToHashSet() ?? new HashSet<int>();
+
+            var currentDbImages = await _context.JobImages
+                                                .Where(img => img.JobInfoId == existingJobInfo.id)
+                                                .ToListAsync();
+
+            foreach (var dbImage in currentDbImages)
+            {
+                if (!submittedExistingImageIds.Contains(dbImage.Id))
+                {
+                    _context.JobImages.Remove(dbImage);
+                }
+            }
+
+            foreach (var submittedImage in jobInfo.Images ?? new List<JobImage>())
+            {
+                if (submittedImage.Id == 0)
+                {
+                    if (!string.IsNullOrEmpty(submittedImage.ImageData))
+                    {
+                        string fullImageData = submittedImage.ImageData;
+                        if (!fullImageData.StartsWith("data:") && !string.IsNullOrEmpty(submittedImage.ContentType))
+                        {
+                            fullImageData = $"data:{submittedImage.ContentType};base64," + fullImageData;
+                        }
+                        submittedImage.ImageData = fullImageData;
+                        submittedImage.JobInfoId = existingJobInfo.id;
+                        _context.JobImages.Add(submittedImage);
+                    }
+                }
+                else
+                {
+                    var imageInDb = currentDbImages.FirstOrDefault(i => i.Id == submittedImage.Id);
+                    if (imageInDb != null)
+                    {
+                        string fullImageData = submittedImage.ImageData;
+                        // Ensuring existing images being updated also get the data URI prefix
+                        if (!fullImageData.StartsWith("data:") && !string.IsNullOrEmpty(submittedImage.ContentType))
+                        {
+                            fullImageData = $"data:{submittedImage.ContentType};base64," + fullImageData;
+                        }
+
+                        imageInDb.ImageData = fullImageData; 
+                        imageInDb.FileName = submittedImage.FileName;
+                        imageInDb.ContentType = submittedImage.ContentType;
+                        imageInDb.Order = submittedImage.Order;
+
+                        _context.Entry(imageInDb).State = EntityState.Modified;
+                    }
+                }
+            }
+
             if (!ModelState.IsValid)
             {
-                TempData["JobEditFailedMessage"] = "Job application Edit Failed!";
-                return View(jobInfo);
+                TempData["JobEditFailedMessage"] = "Job application Edit Failed! Please check your inputs.";
+                return View(existingJobInfo);
             }
 
             try
             {
-                var existingJobInfo = await _context.JobInfos
-                                                        .Include(j => j.Images)
-                                                        .FirstOrDefaultAsync(j => j.id == id);
-
-                if (existingJobInfo == null)
-                {
-                    return NotFound();
-                }
-
-                existingJobInfo.companyName = jobInfo.companyName;
-                existingJobInfo.role = jobInfo.role;
-                existingJobInfo.jobSummary = jobInfo.jobSummary;
-                existingJobInfo.applicationStatus = jobInfo.applicationStatus;
-                existingJobInfo.appliedVia = jobInfo.appliedVia;
-                existingJobInfo.appliedTime = jobInfo.appliedTime;
-                existingJobInfo.notes = jobInfo.notes;
-
-                jobInfo.userId = existingJobInfo.userId;
-
-                var imagesSubmitted = jobInfo.Images?.ToList() ?? new List<JobImage>();
-
-                foreach (var existingImage in existingJobInfo.Images.ToList())
-                {
-                    if (!imagesSubmitted.Any(si => si.Id == existingImage.Id && si.Id != 0))
-                    {
-                        _context.JobImages.Remove(existingImage);
-                    }
-                }
-
-                foreach (var submittedImage in imagesSubmitted)
-                {
-                    if (submittedImage.Id == 0)
-                    {
-                        existingJobInfo.Images.Add(submittedImage);
-                    }
-                    else
-                    {
-                        var imageToUpdate = existingJobInfo.Images.FirstOrDefault(i => i.Id == submittedImage.Id);
-                        if (imageToUpdate != null)
-                        {
-                            imageToUpdate.ImageData = submittedImage.ImageData;
-                            imageToUpdate.FileName = submittedImage.FileName;
-                            imageToUpdate.ContentType = submittedImage.ContentType;
-                        }
-                    }
-                }
-
-                _context.Update(existingJobInfo); 
                 await _context.SaveChangesAsync();
                 TempData["JobEditedMessage"] = "Job application updated successfully!";
             }
@@ -223,13 +247,13 @@ namespace JobJournal.Controllers
                 }
                 else
                 {
-                    TempData["JobEditFailedMessage"] = "Job application Edit Failed!";
+                    TempData["JobEditFailedMessage"] = "Job application Edit Failed due to concurrency conflict!";
                     throw;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["JobEditFailedMessage"] = "Job application Edit Failed!";
+                TempData["JobEditFailedMessage"] = $"Job application Edit Failed! Error: {ex.Message}";
             }
             return RedirectToAction(nameof(Index));
         }
