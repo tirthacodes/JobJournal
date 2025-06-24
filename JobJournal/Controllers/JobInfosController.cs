@@ -130,7 +130,7 @@ namespace JobJournal.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("NotFound");
             }
 
             var jobInfo = await _context.JobInfos
@@ -139,7 +139,7 @@ namespace JobJournal.Controllers
 
             if (jobInfo == null)
             {
-                return NotFound();
+                return View("NotFound");
             }
             return View(jobInfo);
         }
@@ -266,7 +266,7 @@ namespace JobJournal.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("NotFound");
             }
 
             var jobInfo = await _context.JobInfos
@@ -275,7 +275,7 @@ namespace JobJournal.Controllers
 
             if (jobInfo == null)
             {
-                return NotFound();
+                return View("NotFound");
             }
 
             return View(jobInfo);
