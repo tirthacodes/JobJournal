@@ -133,19 +133,83 @@
 }
 else
 {
-    <div class="text-center py-5 my-5">
-        <h2 class="display-6 text-muted mb-4">
-            <i class="bi bi-lightbulb" style="font-size: 3rem;"></i><br />
-            Ready to Track Your Job Search?
-        </h2>
-        <p class="lead text-muted mb-4">
-            This is where you'll see all your job applications.<br />
-            No entries yet? Let's add your first one and start monitoring your progress!
-        </p>
-        <a asp-controller="JobInfos" asp-action="Create" class="btn btn-lg btn-success">
-            <i class="bi bi-plus-circle me-2"></i> Add Your First Application
-        </a>
-    </div>
+    string currentSearchTerm = ViewData["CurrentFilter"] as string;
+    string currentStatusFilter = ViewData["CurrentStatusFilter"] as string;
+
+    bool hasSearchTerm = !string.IsNullOrEmpty(currentSearchTerm);
+    bool hasStatusFilter = !string.IsNullOrEmpty(currentStatusFilter);
+
+    bool hasSearchOrFilter = hasSearchTerm || hasStatusFilter;
+
+    @if (hasSearchOrFilter)
+    {
+        <div class="text-center py-5 my-5">
+            <h2 class="display-6 text-muted mb-4">
+                <i class="bi bi-search" style="font-size: 3rem;"></i><br />
+                No Results Found
+            </h2>
+            <p class="lead text-muted mb-4">
+                @{
+                    string messagePrefix = "Your search";
+                    string searchPart = "";
+                    string statusPart = "";
+
+                    if (hasSearchTerm)
+                    {
+                        searchPart = $"for \"<strong>{currentSearchTerm}</strong>\"";
+                    }
+
+                    if (hasStatusFilter)
+                    {
+                        statusPart = $"with status \"<strong>{currentStatusFilter}</strong>\"";
+                    }
+                    else if (hasSearchTerm && !hasStatusFilter)
+                    {
+                        statusPart = "for all statuses";
+                    }
+
+                    string fullMessage = messagePrefix;
+                    if (!string.IsNullOrEmpty(searchPart))
+                    {
+                        fullMessage += " " + searchPart;
+                    }
+                    if (!string.IsNullOrEmpty(statusPart))
+                    {
+                        if (hasSearchTerm && hasStatusFilter)
+                        {
+                            fullMessage += " and " + statusPart.TrimStart();
+                        }
+                        else
+                        {
+                            fullMessage += " " + statusPart;
+                        }
+                    }
+
+                    fullMessage += " did not match any job applications.";
+                }
+                @Html.Raw(fullMessage)
+            </p>
+            <a asp-action="Index" class="btn btn-lg btn-outline-secondary">
+                <i class="bi bi-x-circle me-2"></i> Clear Search and Filters
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5 my-5">
+            <h2 class="display-6 text-muted mb-4">
+                <i class="bi bi-lightbulb" style="font-size: 3rem;"></i><br />
+                Ready to Track Your Job Search?
+            </h2>
+            <p class="lead text-muted mb-4">
+                This is where you'll see all your job applications.<br />
+                No entries yet? Let's add your first one and start monitoring your progress!
+            </p>
+            <a asp-controller="JobInfos" asp-action="Create" class="btn btn-lg btn-success">
+                <i class="bi bi-plus-circle me-2"></i> Add Your First Application
+            </a>
+        </div>
+    }
 }
 
 @* Modals for notes and toast messages *@
