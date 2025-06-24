@@ -6,6 +6,31 @@ JobJournal is a lightweight and intuitive web application designed to help users
 
 ---
 
+## 📸 Screenshots
+
+### Home Page
+![Home](Screenshots/home.png)
+
+### Job Info List
+![Job Info](Screenshots/jobinfo.png)
+
+### Create New Application
+![Create](Screenshots/create.png)
+
+### Edit Application
+![Edit](Screenshots/edit.png)
+
+### Delete Application Confirmation
+![Delete](Screenshots/delete.png)
+
+### Application Summary Modal
+![Summary](Screenshots/summary.png)
+
+### Statistics View
+![Statistics](Screenshots/statistics.png)
+
+---
+
 ## ✨ Features
 
 ### ✅ Job Application Management (CRUD)
@@ -171,7 +196,7 @@ git push origin feature/your-feature-name
 
 ## 📄 License
 
-Licensed under the [MIT License](LICENSE)
+Licensed under the [MIT License](https://github.com/tirthacodes/JobJournal/blob/main/LICENSE.txt)
 
 ---
 
