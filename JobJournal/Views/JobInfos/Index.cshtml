@@ -390,7 +390,7 @@ else
                     var fullSummary = button.getAttribute('data-full-summary');
                     var allImagesJson = button.getAttribute('data-all-images-json');
 
-                    modalSummaryContent.textContent = fullSummary || "No summary available.";
+                    modalSummaryContent.innerHTML = fullSummary || "No summary available.";
 
                     if (allImagesJson && allImagesJson !== '') {
                         try {

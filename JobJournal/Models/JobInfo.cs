@@ -24,6 +24,7 @@ namespace JobJournal.Models
 
         [Required]
         [StringLength(maximumLength:2500)]
+        [DataType(DataType.Html)]
         [Display(Name ="Job Summary")]
         public string jobSummary { get; set; }
 
