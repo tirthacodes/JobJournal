@@ -18,12 +18,12 @@ namespace JobJournal.Models
         public string companyName { get; set; }
 
         [Required]
-        [StringLength(maximumLength: 40)]
+        [StringLength(maximumLength: 50)]
         [Display(Name ="Job Title")]
         public string role { get; set; }
 
         [Required]
-        [StringLength(maximumLength:200)]
+        [StringLength(maximumLength:2500)]
         [Display(Name ="Job Summary")]
         public string jobSummary { get; set; }
 
@@ -37,7 +37,7 @@ namespace JobJournal.Models
         public AppliedVia appliedVia { get; set; }
 
         [ValidateNever]
-        [StringLength(maximumLength:150)]
+        [StringLength(maximumLength:500)]
         public string? notes { get; set; }
 
         [DataType(DataType.Date)]
