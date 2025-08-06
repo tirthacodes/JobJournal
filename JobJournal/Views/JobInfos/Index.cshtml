@@ -445,7 +445,11 @@ else
 
                 } else if (modalType === 'notes') {
                     var noteContent = button.getAttribute('data-note-content');
-                    modalNotesContent.textContent = noteContent || "No notes available.";
+                    var formattedNotes = (noteContent || "No Notes Available!")
+                        .replace(/\n/g, '<br>')
+                        .replace(/\* /g, '• ');
+                    
+                    modalNotesContent.innerHTML = formattedNotes;
                 }
             });
 
