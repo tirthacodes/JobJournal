@@ -69,11 +69,11 @@
                         <td>
                             @if (job.jobSummary != null && job.jobSummary.Length > 40)
                             {
-                                <span>@job.jobSummary.Substring(0, 40)...</span>
+                                <span>@Html.Raw(job.jobSummary.Substring(0, 40))...</span>
                             }
                             else
                             {
-                                <span>@job.jobSummary</span>
+                                <span>@Html.Raw(job.jobSummary)</span>
                             }
 
                             @{
@@ -390,7 +390,11 @@ else
                     var fullSummary = button.getAttribute('data-full-summary');
                     var allImagesJson = button.getAttribute('data-all-images-json');
 
-                    modalSummaryContent.innerHTML = fullSummary || "No summary available.";
+                    var formattedSummary = (fullSummary || "No summary available.")
+                        .replace(/\n/g, '<br>')
+                        .replace(/\* /g, '• '); 
+
+                    modalSummaryContent.innerHTML = formattedSummary;
 
                     if (allImagesJson && allImagesJson !== '') {
                         try {
