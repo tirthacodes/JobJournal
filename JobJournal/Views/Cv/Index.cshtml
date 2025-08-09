@@ -43,38 +43,45 @@
 
 
 <div class="flex h-screen bg-gray-50">
+
     <div class="w-1/6 p-4 md:p-8 bg-gray-100 border-r border-gray-200 overflow-y-auto">
         <h2 class="text-3xl font-bold text-gray-800 mb-6 hidden md:block">CV</h2>
         <nav class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
             <ul class="space-y-2">
                 <li>
-                    <a href="#" class="sidebar-link active block p-3 rounded-md text-gray-700 hover:bg-gray-200 transition-colors border-l-4 border-l-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sidebar-link-compact" data-target="personal-details-form">
+                    <a href="#" class="sidebar-link active block p-2 rounded-md text-gray-700 hover:bg-gray-200 transition-colors border-l-4 border-l-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sidebar-link-compact" data-target="personal-details-form">
                         <i class="fa-solid fa-user-pen text-xl icon"></i>
                         <span class="text-xs">Personal</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-link block p-3 rounded-md text-gray-700 hover:bg-gray-200 transition-colors border-l-4 border-l-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sidebar-link-compact" data-target="education-form">
+                    <a href="#" class="sidebar-link block p-2 rounded-md text-gray-700 hover:bg-gray-200 transition-colors border-l-4 border-l-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sidebar-link-compact" data-target="education-form">
                         <i class="fa-solid fa-graduation-cap text-xl icon"></i>
                         <span class="text-xs">Education</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-link block p-3 rounded-md text-gray-700 hover:bg-gray-200 transition-colors border-l-4 border-l-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sidebar-link-compact" data-target="experience-form">
+                    <a href="#" class="sidebar-link block p-2 rounded-md text-gray-700 hover:bg-gray-200 transition-colors border-l-4 border-l-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sidebar-link-compact" data-target="experience-form">
                         <i class="fa-solid fa-briefcase text-xl icon"></i>
                         <span class="text-xs">Experience</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-link block p-3 rounded-md text-gray-700 hover:bg-gray-200 transition-colors border-l-4 border-l-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sidebar-link-compact" data-target="projects-form">
+                    <a href="#" class="sidebar-link block p-2 rounded-md text-gray-700 hover:bg-gray-200 transition-colors border-l-4 border-l-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sidebar-link-compact" data-target="projects-form">
                         <i class="fa-solid fa-flask text-xl icon"></i>
                         <span class="text-xs">Projects</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-link block p-3 rounded-md text-gray-700 hover:bg-gray-200 transition-colors border-l-4 border-l-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sidebar-link-compact" data-target="skills-form">
+                    <a href="#" class="sidebar-link block p-2 rounded-md text-gray-700 hover:bg-gray-200 transition-colors border-l-4 border-l-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sidebar-link-compact" data-target="skills-form">
                         <i class="fa-solid fa-code text-xl icon"></i>
                         <span class="text-xs">Skills</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="share-cv-button" class="block p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors border-l-4 border-l-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sidebar-link-compact">
+                        <i class="fa-solid fa-file-arrow-down text-xl icon"></i>
+                        <span class="text-xs">Share CV</span>
                     </a>
                 </li>
             </ul>
@@ -82,7 +89,7 @@
     </div>
 
     <div class="flex-1 flex overflow-hidden">
-        <div class=" p-4 md:p-8 overflow-y-auto">
+        <div class="w- p-4 md:p-8 overflow-y-auto">
             <div id="personal-details-form" class="cv-form">
                 <h3 class="text-xl font-semibold text-gray-700 mb-4">Personal Details</h3>
                 <form asp-controller="Cv" asp-action="SaveCvProfile" method="post" class="space-y-4">
@@ -123,7 +130,7 @@
                         <label asp-for="CvProfile.PhotoUrl" class="block text-sm font-medium text-gray-700">Profile Photo URL</label>
                         <input asp-for="CvProfile.PhotoUrl" value="@(Model.CvProfile?.PhotoUrl ?? "https://placehold.co/128x128/9CA3AF/FFFFFF?text=Photo")" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm live-update" data-preview-target="preview-photo" />
                     </div>
-                    <button type="submit" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                    <button type="submit" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
                         Save Profile
                     </button>
                 </form>
@@ -298,7 +305,7 @@
                     <span id="preview-first-name">@(Model.CvProfile?.FirstName ?? "Tirth")</span>
                     <span id="preview-last-name">@(Model.CvProfile?.LastName ?? "Rai")</span>
                 </h1>
-                <h2 id="preview-designation" class="text-xl text-indigo-600 font-semibold mt-1">@(Model.CvProfile?.Designation ?? "Software Developer")</h2>
+                <h2 id="preview-designation" class="text-xl text-600 font-semibold mt-1">@(Model.CvProfile?.Designation ?? "Software Developer")</h2>
                 <div class="text-gray-600 mt-2">
                     <span id="preview-address">@(Model.CvProfile?.Address ?? "Kathmandu - 10")</span>,
                     <span id="preview-city">@(Model.CvProfile?.City ?? "Kathmandu")</span>
@@ -420,8 +427,43 @@
             </div>
         </div>
     </div>
+
+
 </div>
 
+
+<div id="download-modal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-gray-900 bg-opacity-75 flex justify-center items-center">
+
+    <div class="bg-white rounded-lg shadow-xl p-6 w-96 max-w-full m-4 transform transition-all sm:my-8 sm:align-middle sm:p-6">
+
+        <div class="sm:flex sm:items-start">
+            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                <h3 class="text-xl leading-6 font-medium text-gray-900" id="modal-title">
+                    Download CV
+                </h3>
+                <div class="mt-2">
+                    <p class="text-sm text-gray-500">
+                        Choose a format to download your CV.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+            <button id="download-pdf-button" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
+                Download as PDF
+            </button>
+            <button id="cancel-modal" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 
 <script>
@@ -430,7 +472,6 @@
         const formSections = document.querySelectorAll('.cv-form');
         const cvPreview = document.querySelector('.cv-preview');
 
-        // Function to set the active tab
         function setActiveTab(targetId) {
             sidebarLinks.forEach(item => {
                 item.classList.remove('active');
@@ -451,7 +492,6 @@
             }
         }
 
-        // Handle sidebar link clicks
         sidebarLinks.forEach(link => {
             link.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -461,7 +501,6 @@
             });
         });
 
-        // Live update for personal details form
         const liveUpdateFields = document.querySelectorAll('.live-update');
         liveUpdateFields.forEach(field => {
             field.addEventListener('input', function () {
@@ -477,7 +516,6 @@
             });
         });
 
-        // Set the active tab based on URL hash or default to the first one
         if (window.location.hash) {
             const targetId = window.location.hash.substring(1);
             setActiveTab(targetId);
@@ -492,12 +530,9 @@
         }
 
         function setupFormListeners() {
-            // Unbind existing listeners to prevent duplicates
             document.querySelectorAll('.cv-form form').forEach(form => {
                 form.removeEventListener('submit', handleFormSubmission);
             });
-
-            // Bind listeners for all forms
             document.querySelectorAll('.cv-form form').forEach(form => {
                 form.addEventListener('submit', handleFormSubmission);
             });
@@ -505,7 +540,6 @@
 
         async function handleFormSubmission(e) {
             e.preventDefault();
-
             const form = this;
             const formData = new FormData(form);
             const actionUrl = form.getAttribute('action');
@@ -517,24 +551,17 @@
                     method: formMethod,
                     body: formData
                 });
-
                 if (response.ok) {
-                    // Fetch the updated page content
                     const updatedPageResponse = await fetch(`/Cv`);
                     const newPageHtml = await updatedPageResponse.text();
-
-                    // Parse the new HTML and update specific sections
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(newPageHtml, 'text/html');
-
                     const updateAndReplace = (formId, previewId) => {
                         const newFormList = doc.getElementById(formId).querySelector('div.space-y-4, div.flex-wrap').innerHTML;
                         document.getElementById(formId).querySelector('div.space-y-4, div.flex-wrap').innerHTML = newFormList;
-
                         const newPreviewList = doc.getElementById(previewId).innerHTML;
                         document.getElementById(previewId).innerHTML = newPreviewList;
                     };
-
                     if (activeTab === 'education-form') {
                         updateAndReplace('education-form', 'preview-education-list');
                     } else if (activeTab === 'experience-form') {
@@ -544,20 +571,13 @@
                     } else if (activeTab === 'skills-form') {
                         updateAndReplace('skills-form', 'preview-skills-list');
                     }
-
-                    // Update the CV preview section with the newly fetched data
                     const newCvPreview = doc.querySelector('.cv-preview').innerHTML;
                     cvPreview.innerHTML = newCvPreview;
-
-                    // Clear the form inputs after successful submission (for "add" forms)
                     if (form.getAttribute('action').includes('Add')) {
                         clearFormInputs(form);
                     }
-
-                    // Re-initialize event listeners for the newly loaded content
                     setupFormListeners();
                     setActiveTab(activeTab);
-
                 } else {
                     console.error('Form submission failed:', response.statusText);
                 }
@@ -565,19 +585,13 @@
                 console.error('Error submitting form:', error);
             }
         }
-
         setupFormListeners();
-
-        // Live date separator logic for new entries
         const educationStartYearInput = document.getElementById('NewEducation_StartYear');
         const educationGraduationYearInput = document.getElementById('NewEducation_GraduationYear');
         const educationSeparator = document.getElementById('education-date-separator');
-
         const experienceStartDateInput = document.getElementById('NewExperience_StartDate');
         const experienceEndDateInput = document.getElementById('NewExperience_EndDate');
         const experienceSeparator = document.getElementById('experience-date-separator');
-
-        // Function to toggle the separator for Education
         function toggleEducationSeparator() {
             if (educationStartYearInput.value || educationGraduationYearInput.value) {
                 educationSeparator.classList.remove('hidden');
@@ -585,8 +599,6 @@
                 educationSeparator.classList.add('hidden');
             }
         }
-
-        // Function to toggle the separator for Experience
         function toggleExperienceSeparator() {
             if (experienceStartDateInput.value || experienceEndDateInput.value) {
                 experienceSeparator.classList.remove('hidden');
@@ -594,49 +606,75 @@
                 experienceSeparator.classList.add('hidden');
             }
         }
-
         educationStartYearInput.addEventListener('input', toggleEducationSeparator);
         educationGraduationYearInput.addEventListener('input', toggleEducationSeparator);
         experienceStartDateInput.addEventListener('input', toggleExperienceSeparator);
         experienceEndDateInput.addEventListener('input', toggleExperienceSeparator);
-
-        // Initial check on page load to set correct separator state
         toggleEducationSeparator();
         toggleExperienceSeparator();
-    });
 
-    // Live update for project link
-    const newProjectLinkInput = document.getElementById('NewProject_ProjectLink');
-    const newProjectLinkPreview = document.getElementById('preview-new-project-link');
-    newProjectLinkInput.addEventListener('input', function () {
-        if (this.value) {
-            newProjectLinkPreview.textContent = this.value;
-            newProjectLinkPreview.href = this.value;
-            newProjectLinkPreview.classList.remove('hidden');
-        } else {
-            newProjectLinkPreview.textContent = '';
-            newProjectLinkPreview.href = '#';
-            newProjectLinkPreview.classList.add('hidden');
+        // Live update for project link
+        const newProjectLinkInput = document.getElementById('NewProject_ProjectLink');
+        const newProjectLinkPreview = document.getElementById('preview-new-project-link');
+        newProjectLinkInput.addEventListener('input', function () {
+            if (this.value) {
+                newProjectLinkPreview.textContent = this.value;
+                newProjectLinkPreview.href = this.value;
+                newProjectLinkPreview.classList.remove('hidden');
+            } else {
+                newProjectLinkPreview.textContent = '';
+                newProjectLinkPreview.href = '#';
+                newProjectLinkPreview.classList.add('hidden');
+            }
+        });
+
+        // Live update for skills
+        const newSkillInput = document.getElementById('NewSkill_Name');
+        const newSkillPreview = document.getElementById('preview-new-skill-name');
+        if (newSkillInput && newSkillPreview) {
+            newSkillPreview.style.display = newSkillInput.value.trim() !== '' ? 'inline-block' : 'none';
         }
+        newSkillInput.addEventListener('input', function () {
+            if (this.value.trim() !== '') {
+                newSkillPreview.textContent = this.value;
+                newSkillPreview.style.display = 'inline-block';
+            } else {
+                newSkillPreview.textContent = '';
+                newSkillPreview.style.display = 'none';
+            }
+        });
+
+        const shareCvButton = document.getElementById('share-cv-button');
+        const downloadModal = document.getElementById('download-modal');
+        const downloadPdfButton = document.getElementById('download-pdf-button');
+        const cancelModalButton = document.getElementById('cancel-modal');
+
+        shareCvButton.addEventListener('click', function (e) {
+            e.preventDefault();
+            downloadModal.classList.remove('hidden');
+        });
+
+        // Event listener to trigger the download
+        downloadPdfButton.addEventListener('click', function () {
+            const firstName = document.getElementById('preview-first-name').textContent;
+            const lastName = document.getElementById('preview-last-name').textContent;
+            const element = document.querySelector('.cv-preview');
+
+            const options = {
+                margin: [10, 10, 10, 10],
+                filename: `${firstName}_${lastName}_CV.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(options).from(element).save();
+            downloadModal.classList.add('hidden');
+        });
+
+        // Event listener to close the modal
+        cancelModalButton.addEventListener('click', function () {
+            downloadModal.classList.add('hidden');
+        });
     });
-
-    const newSkillInput = document.getElementById('NewSkill_Name');
-    const newSkillPreview = document.getElementById('preview-new-skill-name');
-
-    // Initially hide the preview element if the input is empty
-    if (newSkillInput && newSkillPreview) {
-        newSkillPreview.style.display = newSkillInput.value.trim() !== '' ? 'inline-block' : 'none';
-    }
-
-    newSkillInput.addEventListener('input', function () {
-        if (this.value.trim() !== '') {
-            newSkillPreview.textContent = this.value;
-            newSkillPreview.style.display = 'inline-block';
-        } else {
-            newSkillPreview.textContent = '';
-            newSkillPreview.style.display = 'none';
-        }
-    });
-
-
 </script>
