@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,6 +9,7 @@ namespace JobJournal.Models
     {
         [Key]
         [ForeignKey("User")]
+        [ValidateNever] 
         public string UserId { get; set; }
 
         [Required]
@@ -41,6 +43,8 @@ namespace JobJournal.Models
         [StringLength(maximumLength: 250)]
         [Display(Name = "Profile Photo URL")]
         public string? PhotoUrl { get; set; }
+
+        [ValidateNever]
 
         public IdentityUser User { get; set; }
     }
