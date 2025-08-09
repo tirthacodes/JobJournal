@@ -48,31 +48,31 @@
         <nav class="bg-gray-100 p-4 rounded-lg shadow-sm border border-gray-200">
             <ul class="space-y-2">
                 <li>
-                    <a href="#personal-details-form" class="sidebar-link block p-3 rounded-md text-gray-700 hover:bg-gray-200 transition-colors border-l-4 border-l-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sidebar-link-compact" data-target="personal-details-form">
+                    <a href="#" class="sidebar-link active block p-3 rounded-md text-gray-700 hover:bg-gray-200 transition-colors border-l-4 border-l-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sidebar-link-compact" data-target="personal-details-form">
                         <i class="fa-solid fa-user-pen text-xl icon"></i>
                         <span class="text-xs">Personal</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#education-form" class="sidebar-link block p-3 rounded-md text-gray-700 hover:bg-gray-200 transition-colors border-l-4 border-l-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sidebar-link-compact" data-target="education-form">
+                    <a href="#" class="sidebar-link block p-3 rounded-md text-gray-700 hover:bg-gray-200 transition-colors border-l-4 border-l-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sidebar-link-compact" data-target="education-form">
                         <i class="fa-solid fa-graduation-cap text-xl icon"></i>
                         <span class="text-xs">Education</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#experience-form" class="sidebar-link block p-3 rounded-md text-gray-700 hover:bg-gray-200 transition-colors border-l-4 border-l-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sidebar-link-compact" data-target="experience-form">
+                    <a href="#" class="sidebar-link block p-3 rounded-md text-gray-700 hover:bg-gray-200 transition-colors border-l-4 border-l-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sidebar-link-compact" data-target="experience-form">
                         <i class="fa-solid fa-briefcase text-xl icon"></i>
                         <span class="text-xs">Experience</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#projects-form" class="sidebar-link block p-3 rounded-md text-gray-700 hover:bg-gray-200 transition-colors border-l-4 border-l-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sidebar-link-compact" data-target="projects-form">
+                    <a href="#" class="sidebar-link block p-3 rounded-md text-gray-700 hover:bg-gray-200 transition-colors border-l-4 border-l-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sidebar-link-compact" data-target="projects-form">
                         <i class="fa-solid fa-flask text-xl icon"></i>
                         <span class="text-xs">Projects</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#skills-form" class="sidebar-link block p-3 rounded-md text-gray-700 hover:bg-gray-200 transition-colors border-l-4 border-l-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sidebar-link-compact" data-target="skills-form">
+                    <a href="#" class="sidebar-link block p-3 rounded-md text-gray-700 hover:bg-gray-200 transition-colors border-l-4 border-l-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sidebar-link-compact" data-target="skills-form">
                         <i class="fa-solid fa-code text-xl icon"></i>
                         <span class="text-xs">Skills</span>
                     </a>
@@ -87,6 +87,7 @@
             <div id="personal-details-form" class="cv-form">
                 <h3 class="text-xl font-semibold text-gray-700 mb-4">Personal Details</h3>
                 <form asp-controller="Cv" asp-action="SaveCvProfile" method="post" class="space-y-4">
+                    <input type="hidden" name="activeTab" value="personal-details-form" />
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label asp-for="CvProfile.FirstName" class="block text-sm font-medium text-gray-700">First Name</label>
@@ -132,34 +133,39 @@
             <!-- Education Form -->
             <div id="education-form" class="cv-form hidden">
                 <h3 class="text-xl font-semibold text-gray-700 mb-4">Education</h3>
-                <div class="mt-4 space-y-4" id="education-list-container">
+                <div class="mt-4 space-y-4">
                     @foreach (var education in Model.Educations)
                     {
-                        <div class="flex items-center justify-between p-3 border rounded-md education-item">
+                        <div class="flex items-center justify-between p-3 border rounded-md">
                             <span class="text-sm font-medium text-gray-900">@education.Degree at @education.SchoolInstitution</span>
-                            <button type="button" class="text-red-500 hover:text-red-700 transition-colors remove-btn">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
+                            <form asp-controller="Cv" asp-action="DeleteEducation" method="post">
+                                <input type="hidden" name="id" value="@education.Id" />
+                                <input type="hidden" name="activeTab" value="education-form" />
+                                <button type="submit" class="text-red-500 hover:text-red-700 transition-colors">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </form>
                         </div>
                     }
                 </div>
-                <form id="add-education-form" class="space-y-2 mt-4">
+                <form asp-controller="Cv" asp-action="AddEducation" method="post" class="space-y-2 mt-4">
+                    <input type="hidden" name="activeTab" value="education-form" />
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label asp-for="NewEducation.Degree" class="block text-sm font-medium text-gray-700">Degree / Field of Study</label>
-                            <input asp-for="NewEducation.Degree" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" id="new-education-degree" />
+                            <input asp-for="NewEducation.Degree" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
                         </div>
                         <div>
                             <label asp-for="NewEducation.SchoolInstitution" class="block text-sm font-medium text-gray-700">School / Institution</label>
-                            <input asp-for="NewEducation.SchoolInstitution" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" id="new-education-school" />
+                            <input asp-for="NewEducation.SchoolInstitution" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
                         </div>
                         <div>
                             <label asp-for="NewEducation.StartYear" class="block text-sm font-medium text-gray-700">Start Year</label>
-                            <input asp-for="NewEducation.StartYear" type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" id="new-education-start" />
+                            <input asp-for="NewEducation.StartYear" type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
                         </div>
                         <div>
                             <label asp-for="NewEducation.GraduationYear" class="block text-sm font-medium text-gray-700">Graduation Year</label>
-                            <input asp-for="NewEducation.GraduationYear" type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" id="new-education-grad" />
+                            <input asp-for="NewEducation.GraduationYear" type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
                         </div>
                     </div>
                     <button type="submit" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
@@ -171,39 +177,44 @@
             <!-- Experience Form -->
             <div id="experience-form" class="cv-form hidden">
                 <h3 class="text-xl font-semibold text-gray-700 mb-4">Experience</h3>
-                <div class="mt-4 space-y-4" id="experience-list-container">
+                <div class="mt-4 space-y-4">
                     @foreach (var experience in Model.Experiences)
                     {
-                        <div class="flex items-center justify-between p-3 border rounded-md experience-item">
+                        <div class="flex items-center justify-between p-3 border rounded-md">
                             <span class="text-sm font-medium text-gray-900">@experience.JobTitle at @experience.EmployerOrganization</span>
-                            <button type="button" class="text-red-500 hover:text-red-700 transition-colors remove-btn">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
+                            <form asp-controller="Cv" asp-action="DeleteExperience" method="post">
+                                <input type="hidden" name="id" value="@experience.Id" />
+                                <input type="hidden" name="activeTab" value="experience-form" />
+                                <button type="submit" class="text-red-500 hover:text-red-700 transition-colors">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </form>
                         </div>
                     }
                 </div>
-                <form id="add-experience-form" class="space-y-2 mt-4">
+                <form asp-controller="Cv" asp-action="AddExperience" method="post" class="space-y-2 mt-4">
+                    <input type="hidden" name="activeTab" value="experience-form" />
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label asp-for="NewExperience.JobTitle" class="block text-sm font-medium text-gray-700">Job Title</label>
-                            <input asp-for="NewExperience.JobTitle" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" id="new-experience-title" />
+                            <input asp-for="NewExperience.JobTitle" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
                         </div>
                         <div>
                             <label asp-for="NewExperience.EmployerOrganization" class="block text-sm font-medium text-gray-700">Employer / Organization</label>
-                            <input asp-for="NewExperience.EmployerOrganization" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" id="new-experience-employer" />
+                            <input asp-for="NewExperience.EmployerOrganization" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
                         </div>
                         <div>
                             <label asp-for="NewExperience.StartDate" class="block text-sm font-medium text-gray-700">Start Date</label>
-                            <input asp-for="NewExperience.StartDate" type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" id="new-experience-start-date" />
+                            <input asp-for="NewExperience.StartDate" type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
                         </div>
                         <div>
                             <label asp-for="NewExperience.EndDate" class="block text-sm font-medium text-gray-700">End Date</label>
-                            <input asp-for="NewExperience.EndDate" type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" id="new-experience-end-date" />
+                            <input asp-for="NewExperience.EndDate" type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
                         </div>
                     </div>
                     <div>
                         <label asp-for="NewExperience.Description" class="block text-sm font-medium text-gray-700">Description</label>
-                        <textarea asp-for="NewExperience.Description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" id="new-experience-desc"></textarea>
+                        <textarea asp-for="NewExperience.Description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm"></textarea>
                     </div>
                     <button type="submit" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
                         Add Experience
@@ -214,31 +225,36 @@
             <!-- Projects Form -->
             <div id="projects-form" class="cv-form hidden">
                 <h3 class="text-xl font-semibold text-gray-700 mb-4">Projects</h3>
-                <div class="mt-4 space-y-4" id="projects-list-container">
+                <div class="mt-4 space-y-4">
                     @foreach (var project in Model.Projects)
                     {
-                        <div class="flex items-center justify-between p-3 border rounded-md project-item">
+                        <div class="flex items-center justify-between p-3 border rounded-md">
                             <span class="text-sm font-medium text-gray-900">@project.Title</span>
-                            <button type="button" class="text-red-500 hover:text-red-700 transition-colors remove-btn">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
+                            <form asp-controller="Cv" asp-action="DeleteProject" method="post">
+                                <input type="hidden" name="id" value="@project.Id" />
+                                <input type="hidden" name="activeTab" value="projects-form" />
+                                <button type="submit" class="text-red-500 hover:text-red-700 transition-colors">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </form>
                         </div>
                     }
                 </div>
-                <form id="add-projects-form" class="space-y-2 mt-4">
+                <form asp-controller="Cv" asp-action="AddProject" method="post" class="space-y-2 mt-4">
+                    <input type="hidden" name="activeTab" value="projects-form" />
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label asp-for="NewProject.Title" class="block text-sm font-medium text-gray-700">Title</label>
-                            <input asp-for="NewProject.Title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" id="new-project-title" />
+                            <input asp-for="NewProject.Title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
                         </div>
                         <div>
                             <label asp-for="NewProject.ProjectLink" class="block text-sm font-medium text-gray-700">Project Link</label>
-                            <input asp-for="NewProject.ProjectLink" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" id="new-project-link" />
+                            <input asp-for="NewProject.ProjectLink" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
                         </div>
                     </div>
                     <div>
                         <label asp-for="NewProject.Description" class="block text-sm font-medium text-gray-700">Description</label>
-                        <textarea asp-for="NewProject.Description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" id="new-project-desc"></textarea>
+                        <textarea asp-for="NewProject.Description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm"></textarea>
                     </div>
                     <button type="submit" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
                         Add Project
@@ -250,20 +266,25 @@
             <div id="skills-form" class="cv-form hidden">
                 <h3 class="text-xl font-semibold text-gray-700 mb-4">Skills</h3>
                 <div class="mt-4 space-y-4">
-                    <div class="flex flex-wrap gap-2" id="skills-list-container">
+                    <div class="flex flex-wrap gap-2">
                         @foreach (var skill in Model.Skills)
                         {
-                            <div class="flex items-center gap-2 bg-indigo-100 text-indigo-800 text-sm font-medium px-2.5 py-1 rounded-full skill-item">
+                            <div class="flex items-center gap-2 bg-indigo-100 text-indigo-800 text-sm font-medium px-2.5 py-1 rounded-full">
                                 <span>@skill.Name</span>
-                                <button type="button" class="text-indigo-500 hover:text-indigo-700 transition-colors remove-btn">
-                                    <i class="fa-solid fa-xmark"></i>
-                                </button>
+                                <form asp-controller="Cv" asp-action="DeleteSkill" method="post" class="inline-block">
+                                    <input type="hidden" name="id" value="@skill.Id" />
+                                    <input type="hidden" name="activeTab" value="skills-form" />
+                                    <button type="submit" class="text-indigo-500 hover:text-indigo-700 transition-colors">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </form>
                             </div>
                         }
                     </div>
                 </div>
-                <form id="add-skills-form" class="mt-4 flex gap-2">
-                    <input asp-for="NewSkill.Name" placeholder="Enter a new skill" class="flex-1 rounded-md border-gray-300 shadow-sm sm:text-sm" id="new-skill-name" />
+                <form asp-controller="Cv" asp-action="AddSkill" method="post" class="mt-4 flex gap-2">
+                    <input type="hidden" name="activeTab" value="skills-form" />
+                    <input asp-for="NewSkill.Name" placeholder="Enter a new skill" class="flex-1 rounded-md border-gray-300 shadow-sm sm:text-sm" />
                     <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
                         Add Skill
                     </button>
@@ -360,11 +381,16 @@
     </div>
 </div>
 
+
+
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const sidebarLinks = document.querySelectorAll('.sidebar-link');
         const formSections = document.querySelectorAll('.cv-form');
+        const cvPreview = document.querySelector('.cv-preview');
 
+        // Function to set the active tab
         function setActiveTab(targetId) {
             sidebarLinks.forEach(item => item.classList.remove('active'));
             formSections.forEach(section => section.classList.add('hidden'));
@@ -379,24 +405,17 @@
             }
         }
 
-        // Use event delegation for hashchange
-        window.addEventListener('hashchange', function () {
-            const hash = window.location.hash;
-            if (hash) {
-                setActiveTab(hash.substring(1)); // Remove the #
-            } else {
-                setActiveTab('personal-details-form');
-            }
+        // Handle sidebar link clicks
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('data-target');
+                setActiveTab(targetId);
+                window.location.hash = targetId;
+            });
         });
 
-        // Set the active tab on initial page load
-        const initialHash = window.location.hash;
-        if (initialHash) {
-            setActiveTab(initialHash.substring(1));
-        } else {
-            setActiveTab('personal-details-form');
-        }
-
+        // Live update for personal details form
         const liveUpdateFields = document.querySelectorAll('.live-update');
         liveUpdateFields.forEach(field => {
             field.addEventListener('input', function () {
@@ -412,134 +431,105 @@
             });
         });
 
-        // Function to handle adding a new item to a list and the preview
-        function addItem(formId, formType, previewListId, previewSectionId) {
-            const form = document.getElementById(formId);
-            form.addEventListener('submit', function (event) {
-                event.preventDefault(); // Stop the page from reloading
+        // Set the active tab based on URL hash or default to the first one
+        if (window.location.hash) {
+            const targetId = window.location.hash.substring(1);
+            setActiveTab(targetId);
+        } else {
+            setActiveTab('personal-details-form');
+        }
 
-                const listContainer = document.getElementById(formType + '-list-container');
-                const previewList = document.getElementById(previewListId);
-
-                let itemData;
-                let listItemHtml;
-                let previewItemHtml;
-
-                if (formType === 'education') {
-                    const degree = document.getElementById('new-education-degree').value;
-                    const school = document.getElementById('new-education-school').value;
-                    const startYear = document.getElementById('new-education-start').value;
-                    const gradYear = document.getElementById('new-education-grad').value;
-                    if (!degree || !school) return;
-
-                    listItemHtml = `<div class="flex items-center justify-between p-3 border rounded-md education-item">
-                                            <span class="text-sm font-medium text-gray-900">${degree} at ${school}</span>
-                                            <button type="button" class="text-red-500 hover:text-red-700 transition-colors remove-btn">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </button>
-                                        </div>`;
-                    previewItemHtml = `<div class="preview-education-item">
-                                                <div class="flex justify-between items-start">
-                                                    <h4 class="font-semibold text-gray-800">${degree}</h4>
-                                                    <span class="text-gray-500 text-sm">${startYear} - ${gradYear}</span>
-                                                </div>
-                                                <div class="text-sm text-gray-600">${school}</div>
-                                            </div>`;
-                } else if (formType === 'experience') {
-                    const title = document.getElementById('new-experience-title').value;
-                    const employer = document.getElementById('new-experience-employer').value;
-                    const startDate = document.getElementById('new-experience-start-date').value;
-                    const endDate = document.getElementById('new-experience-end-date').value;
-                    const description = document.getElementById('new-experience-desc').value;
-                    if (!title || !employer) return;
-
-                    listItemHtml = `<div class="flex items-center justify-between p-3 border rounded-md experience-item">
-                                            <span class="text-sm font-medium text-gray-900">${title} at ${employer}</span>
-                                            <button type="button" class="text-red-500 hover:text-red-700 transition-colors remove-btn">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </button>
-                                        </div>`;
-                    previewItemHtml = `<div class="preview-experience-item">
-                                                <div class="flex justify-between items-start">
-                                                    <h4 class="font-semibold text-gray-800">${title}</h4>
-                                                    <span class="text-gray-500 text-sm">${startDate} - ${endDate}</span>
-                                                </div>
-                                                <div class="text-sm text-gray-600">${employer}</div>
-                                                <p class="text-sm text-gray-700 mt-1">${description}</p>
-                                            </div>`;
-                } else if (formType === 'projects') {
-                    const title = document.getElementById('new-project-title').value;
-                    const link = document.getElementById('new-project-link').value;
-                    const description = document.getElementById('new-project-desc').value;
-                    if (!title) return;
-
-                    listItemHtml = `<div class="flex items-center justify-between p-3 border rounded-md project-item">
-                                            <span class="text-sm font-medium text-gray-900">${title}</span>
-                                            <button type="button" class="text-red-500 hover:text-red-700 transition-colors remove-btn">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </button>
-                                        </div>`;
-                    previewItemHtml = `<div class="preview-project-item">
-                                                <h4 class="font-semibold text-gray-800">${title}</h4>
-                                                <a href="${link}" class="text-indigo-600 hover:underline text-sm" target="_blank">${link}</a>
-                                                <p class="text-sm text-gray-700 mt-1">${description}</p>
-                                            </div>`;
-                } else if (formType === 'skills') {
-                    const name = document.getElementById('new-skill-name').value;
-                    if (!name) return;
-
-                    listItemHtml = `<div class="flex items-center gap-2 bg-indigo-100 text-indigo-800 text-sm font-medium px-2.5 py-1 rounded-full skill-item">
-                                            <span>${name}</span>
-                                            <button type="button" class="text-indigo-500 hover:text-indigo-700 transition-colors remove-btn">
-                                                <i class="fa-solid fa-xmark"></i>
-                                            </button>
-                                        </div>`;
-                    previewItemHtml = `<span class="bg-gray-200 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full preview-skill-item">${name}</span>`;
-                }
-
-                // Append new item to the form list
-                if (listItemHtml) {
-                    const tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = listItemHtml.trim();
-                    listContainer.appendChild(tempDiv.firstChild);
-                }
-
-                // Append new item to the preview list
-                if (previewItemHtml) {
-                    const tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = previewItemHtml.trim();
-                    previewList.appendChild(tempDiv.firstChild);
-                }
-
-                document.getElementById(previewSectionId).classList.remove('hidden');
-                form.reset();
+        function clearFormInputs(form) {
+            form.querySelectorAll('input:not([type="hidden"]), textarea').forEach(input => {
+                input.value = '';
             });
         }
 
-        addItem('add-education-form', 'education', 'preview-education-list', 'preview-education-section');
-        addItem('add-experience-form', 'experience', 'preview-experience-list', 'preview-experience-section');
-        addItem('add-projects-form', 'projects', 'preview-projects-list', 'preview-projects-section');
-        addItem('add-skills-form', 'skills', 'preview-skills-list', 'preview-skills-section');
+        function setupFormListeners() {
+            // Unbind existing listeners to prevent duplicates
+            document.querySelectorAll('.cv-form form').forEach(form => {
+                form.removeEventListener('submit', handleFormSubmission);
+            });
 
-        // Event delegation for "Remove" buttons
-        document.addEventListener('click', function (event) {
-            if (event.target.closest('.remove-btn')) {
-                const item = event.target.closest('.education-item, .experience-item, .project-item, .skill-item');
-                if (!item) return;
+            // Bind listeners for all forms
+            document.querySelectorAll('.cv-form form').forEach(form => {
+                form.addEventListener('submit', handleFormSubmission);
+            });
+        }
 
-                const listContainer = item.parentElement;
-                const itemClass = Array.from(item.classList).find(c => c.endsWith('-item'));
-                const previewClass = 'preview-' + itemClass;
+        async function handleFormSubmission(e) {
+            e.preventDefault();
 
-                const index = Array.from(listContainer.children).indexOf(item);
-                const previewList = document.querySelector(`.cv-preview .${previewClass}`).parentElement;
+            const form = this;
+            const formData = new FormData(form);
+            const actionUrl = form.getAttribute('action');
+            const formMethod = form.getAttribute('method');
+            const activeTab = window.location.hash.substring(1) || 'personal-details-form';
 
-                if (previewList && previewList.children[index]) {
-                    previewList.children[index].remove();
+            try {
+                const response = await fetch(actionUrl, {
+                    method: formMethod,
+                    body: formData
+                });
+
+                if (response.ok) {
+                    // Fetch the updated page content
+                    const updatedPageResponse = await fetch(`/Cv`);
+                    const newPageHtml = await updatedPageResponse.text();
+
+                    // Parse the new HTML and update specific sections
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(newPageHtml, 'text/html');
+
+                    // Update CV lists
+                    if (activeTab === 'education-form') {
+                        const newEducationList = doc.getElementById('preview-education-list').innerHTML;
+                        document.getElementById('preview-education-list').innerHTML = newEducationList;
+                        const newEducationFormList = doc.getElementById('education-form').querySelector('div.space-y-4').innerHTML;
+                        document.getElementById('education-form').querySelector('div.space-y-4').innerHTML = newEducationFormList;
+                    } else if (activeTab === 'experience-form') {
+                        const newExperienceList = doc.getElementById('preview-experience-list').innerHTML;
+                        document.getElementById('preview-experience-list').innerHTML = newExperienceList;
+                        const newExperienceFormList = doc.getElementById('experience-form').querySelector('div.space-y-4').innerHTML;
+                        document.getElementById('experience-form').querySelector('div.space-y-4').innerHTML = newExperienceFormList;
+                    } else if (activeTab === 'projects-form') {
+                        const newProjectsList = doc.getElementById('preview-projects-list').innerHTML;
+                        document.getElementById('preview-projects-list').innerHTML = newProjectsList;
+                        const newProjectsFormList = doc.getElementById('projects-form').querySelector('div.space-y-4').innerHTML;
+                        document.getElementById('projects-form').querySelector('div.space-y-4').innerHTML = newProjectsFormList;
+                    } else if (activeTab === 'skills-form') {
+                        const newSkillsList = doc.getElementById('preview-skills-list').innerHTML;
+                        document.getElementById('preview-skills-list').innerHTML = newSkillsList;
+                        const newSkillsFormList = doc.getElementById('skills-form').querySelector('div.space-y-4').innerHTML;
+                        document.getElementById('skills-form').querySelector('div.space-y-4').innerHTML = newSkillsFormList;
+                    }
+
+                    // Update the CV preview section with the newly fetched data
+                    const newCvPreview = doc.querySelector('.cv-preview').innerHTML;
+                    cvPreview.innerHTML = newCvPreview;
+
+                    // Clear the form inputs after successful submission (for "add" forms)
+                    if (form.getAttribute('action').includes('Add')) {
+                        clearFormInputs(form);
+                    }
+
+                    // Re-initialize event listeners for the newly loaded content
+                    setupFormListeners();
+                    setActiveTab(activeTab);
+
+                    // Show the relevant preview sections if they were previously hidden
+                    document.getElementById('preview-education-section').classList.remove('hidden');
+                    document.getElementById('preview-experience-section').classList.remove('hidden');
+                    document.getElementById('preview-projects-section').classList.remove('hidden');
+                    document.getElementById('preview-skills-section').classList.remove('hidden');
+                } else {
+                    console.error('Form submission failed:', response.statusText);
                 }
-
-                item.remove();
+            } catch (error) {
+                console.error('Error submitting form:', error);
             }
-        });
+        }
+
+        setupFormListeners();
     });
 </script>
