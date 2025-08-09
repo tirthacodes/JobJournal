@@ -30,6 +30,15 @@
         .sidebar-link-compact .icon {
             margin-bottom: 0.25rem;
         }
+
+    .cv-section-title {
+        border-bottom: 2px solid #e2e8f0;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1a202c;
+    }
 </style>
 
 <div class="container mx-auto p-4 md:p-8 grid grid-cols-12 gap-8 max-w-7xl">
@@ -74,9 +83,11 @@
 
     <div class="col-span-12 md:col-span-4">
         <div class="flex-1 space-y-8 cv-form-container">
+            <!-- Personal Details Form -->
             <div id="personal-details-form" class="cv-form">
                 <h3 class="text-xl font-semibold text-gray-700 mb-4">Personal Details</h3>
                 <form asp-controller="Cv" asp-action="SaveCvProfile" method="post" class="space-y-4">
+                    <input type="hidden" name="activeTab" value="personal-details-form" />
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label asp-for="CvProfile.FirstName" class="block text-sm font-medium text-gray-700">First Name</label>
@@ -119,6 +130,7 @@
                 </form>
             </div>
 
+            <!-- Education Form -->
             <div id="education-form" class="cv-form hidden">
                 <h3 class="text-xl font-semibold text-gray-700 mb-4">Education</h3>
                 <div class="mt-4 space-y-4">
@@ -128,38 +140,41 @@
                             <span class="text-sm font-medium text-gray-900">@education.Degree at @education.SchoolInstitution</span>
                             <form asp-controller="Cv" asp-action="DeleteEducation" method="post">
                                 <input type="hidden" name="id" value="@education.Id" />
+                                <input type="hidden" name="activeTab" value="education-form" />
                                 <button type="submit" class="text-red-500 hover:text-red-700 transition-colors">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </form>
                         </div>
                     }
-                    <form asp-controller="Cv" asp-action="AddEducation" method="post" class="space-y-2 mt-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label asp-for="NewEducation.Degree" class="block text-sm font-medium text-gray-700">Degree / Field of Study</label>
-                                <input asp-for="NewEducation.Degree" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
-                            </div>
-                            <div>
-                                <label asp-for="NewEducation.SchoolInstitution" class="block text-sm font-medium text-gray-700">School / Institution</label>
-                                <input asp-for="NewEducation.SchoolInstitution" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
-                            </div>
-                            <div>
-                                <label asp-for="NewEducation.StartYear" class="block text-sm font-medium text-gray-700">Start Year</label>
-                                <input asp-for="NewEducation.StartYear" type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
-                            </div>
-                            <div>
-                                <label asp-for="NewEducation.GraduationYear" class="block text-sm font-medium text-gray-700">Graduation Year</label>
-                                <input asp-for="NewEducation.GraduationYear" type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
-                            </div>
-                        </div>
-                        <button type="submit" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
-                            Add Education
-                        </button>
-                    </form>
                 </div>
+                <form asp-controller="Cv" asp-action="AddEducation" method="post" class="space-y-2 mt-4">
+                    <input type="hidden" name="activeTab" value="education-form" />
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label asp-for="NewEducation.Degree" class="block text-sm font-medium text-gray-700">Degree / Field of Study</label>
+                            <input asp-for="NewEducation.Degree" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+                        </div>
+                        <div>
+                            <label asp-for="NewEducation.SchoolInstitution" class="block text-sm font-medium text-gray-700">School / Institution</label>
+                            <input asp-for="NewEducation.SchoolInstitution" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+                        </div>
+                        <div>
+                            <label asp-for="NewEducation.StartYear" class="block text-sm font-medium text-gray-700">Start Year</label>
+                            <input asp-for="NewEducation.StartYear" type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+                        </div>
+                        <div>
+                            <label asp-for="NewEducation.GraduationYear" class="block text-sm font-medium text-gray-700">Graduation Year</label>
+                            <input asp-for="NewEducation.GraduationYear" type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+                        Add Education
+                    </button>
+                </form>
             </div>
 
+            <!-- Experience Form -->
             <div id="experience-form" class="cv-form hidden">
                 <h3 class="text-xl font-semibold text-gray-700 mb-4">Experience</h3>
                 <div class="mt-4 space-y-4">
@@ -169,42 +184,45 @@
                             <span class="text-sm font-medium text-gray-900">@experience.JobTitle at @experience.EmployerOrganization</span>
                             <form asp-controller="Cv" asp-action="DeleteExperience" method="post">
                                 <input type="hidden" name="id" value="@experience.Id" />
+                                <input type="hidden" name="activeTab" value="experience-form" />
                                 <button type="submit" class="text-red-500 hover:text-red-700 transition-colors">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </form>
                         </div>
                     }
-                    <form asp-controller="Cv" asp-action="AddExperience" method="post" class="space-y-2 mt-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label asp-for="NewExperience.JobTitle" class="block text-sm font-medium text-gray-700">Job Title</label>
-                                <input asp-for="NewExperience.JobTitle" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
-                            </div>
-                            <div>
-                                <label asp-for="NewExperience.EmployerOrganization" class="block text-sm font-medium text-gray-700">Employer / Organization</label>
-                                <input asp-for="NewExperience.EmployerOrganization" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
-                            </div>
-                            <div>
-                                <label asp-for="NewExperience.StartDate" class="block text-sm font-medium text-gray-700">Start Date</label>
-                                <input asp-for="NewExperience.StartDate" type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
-                            </div>
-                            <div>
-                                <label asp-for="NewExperience.EndDate" class="block text-sm font-medium text-gray-700">End Date</label>
-                                <input asp-for="NewExperience.EndDate" type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
-                            </div>
+                </div>
+                <form asp-controller="Cv" asp-action="AddExperience" method="post" class="space-y-2 mt-4">
+                    <input type="hidden" name="activeTab" value="experience-form" />
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label asp-for="NewExperience.JobTitle" class="block text-sm font-medium text-gray-700">Job Title</label>
+                            <input asp-for="NewExperience.JobTitle" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
                         </div>
                         <div>
-                            <label asp-for="NewExperience.Description" class="block text-sm font-medium text-gray-700">Description</label>
-                            <textarea asp-for="NewExperience.Description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm"></textarea>
+                            <label asp-for="NewExperience.EmployerOrganization" class="block text-sm font-medium text-gray-700">Employer / Organization</label>
+                            <input asp-for="NewExperience.EmployerOrganization" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
                         </div>
-                        <button type="submit" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
-                            Add Experience
-                        </button>
-                    </form>
-                </div>
+                        <div>
+                            <label asp-for="NewExperience.StartDate" class="block text-sm font-medium text-gray-700">Start Date</label>
+                            <input asp-for="NewExperience.StartDate" type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+                        </div>
+                        <div>
+                            <label asp-for="NewExperience.EndDate" class="block text-sm font-medium text-gray-700">End Date</label>
+                            <input asp-for="NewExperience.EndDate" type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+                        </div>
+                    </div>
+                    <div>
+                        <label asp-for="NewExperience.Description" class="block text-sm font-medium text-gray-700">Description</label>
+                        <textarea asp-for="NewExperience.Description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm"></textarea>
+                    </div>
+                    <button type="submit" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+                        Add Experience
+                    </button>
+                </form>
             </div>
 
+            <!-- Projects Form -->
             <div id="projects-form" class="cv-form hidden">
                 <h3 class="text-xl font-semibold text-gray-700 mb-4">Projects</h3>
                 <div class="mt-4 space-y-4">
@@ -214,34 +232,37 @@
                             <span class="text-sm font-medium text-gray-900">@project.Title</span>
                             <form asp-controller="Cv" asp-action="DeleteProject" method="post">
                                 <input type="hidden" name="id" value="@project.Id" />
+                                <input type="hidden" name="activeTab" value="projects-form" />
                                 <button type="submit" class="text-red-500 hover:text-red-700 transition-colors">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </form>
                         </div>
                     }
-                    <form asp-controller="Cv" asp-action="AddProject" method="post" class="space-y-2 mt-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label asp-for="NewProject.Title" class="block text-sm font-medium text-gray-700">Title</label>
-                                <input asp-for="NewProject.Title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
-                            </div>
-                            <div>
-                                <label asp-for="NewProject.ProjectLink" class="block text-sm font-medium text-gray-700">Project Link</label>
-                                <input asp-for="NewProject.ProjectLink" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
-                            </div>
+                </div>
+                <form asp-controller="Cv" asp-action="AddProject" method="post" class="space-y-2 mt-4">
+                    <input type="hidden" name="activeTab" value="projects-form" />
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label asp-for="NewProject.Title" class="block text-sm font-medium text-gray-700">Title</label>
+                            <input asp-for="NewProject.Title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
                         </div>
                         <div>
-                            <label asp-for="NewProject.Description" class="block text-sm font-medium text-gray-700">Description</label>
-                            <textarea asp-for="NewProject.Description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm"></textarea>
+                            <label asp-for="NewProject.ProjectLink" class="block text-sm font-medium text-gray-700">Project Link</label>
+                            <input asp-for="NewProject.ProjectLink" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
                         </div>
-                        <button type="submit" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
-                            Add Project
-                        </button>
-                    </form>
-                </div>
+                    </div>
+                    <div>
+                        <label asp-for="NewProject.Description" class="block text-sm font-medium text-gray-700">Description</label>
+                        <textarea asp-for="NewProject.Description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm"></textarea>
+                    </div>
+                    <button type="submit" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+                        Add Project
+                    </button>
+                </form>
             </div>
 
+            <!-- Skills Form -->
             <div id="skills-form" class="cv-form hidden">
                 <h3 class="text-xl font-semibold text-gray-700 mb-4">Skills</h3>
                 <div class="mt-4 space-y-4">
@@ -252,6 +273,7 @@
                                 <span>@skill.Name</span>
                                 <form asp-controller="Cv" asp-action="DeleteSkill" method="post" class="inline-block">
                                     <input type="hidden" name="id" value="@skill.Id" />
+                                    <input type="hidden" name="activeTab" value="skills-form" />
                                     <button type="submit" class="text-indigo-500 hover:text-indigo-700 transition-colors">
                                         <i class="fa-solid fa-xmark"></i>
                                     </button>
@@ -259,17 +281,19 @@
                             </div>
                         }
                     </div>
-                    <form asp-controller="Cv" asp-action="AddSkill" method="post" class="mt-4 flex gap-2">
-                        <input asp-for="NewSkill.Name" placeholder="Enter a new skill" class="flex-1 rounded-md border-gray-300 shadow-sm sm:text-sm" />
-                        <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
-                            Add Skill
-                        </button>
-                    </form>
                 </div>
+                <form asp-controller="Cv" asp-action="AddSkill" method="post" class="mt-4 flex gap-2">
+                    <input type="hidden" name="activeTab" value="skills-form" />
+                    <input asp-for="NewSkill.Name" placeholder="Enter a new skill" class="flex-1 rounded-md border-gray-300 shadow-sm sm:text-sm" />
+                    <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+                        Add Skill
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 
+    <!-- CV Preview Section -->
     <div class="col-span-12 md:col-span-6 flex-1">
         <div class="cv-preview">
             <div class="flex flex-col items-center mb-6 text-center">
@@ -297,74 +321,62 @@
                 </div>
             }
 
-            @if (Model.Educations.Any())
-            {
-                <div class="mb-6">
-                    <h3 class="cv-section-title">Education</h3>
-                    <div class="space-y-4">
-                        @foreach (var education in Model.Educations)
-                        {
-                            <div>
-                                <div class="flex justify-between items-start">
-                                    <h4 class="font-semibold text-gray-800">@education.Degree</h4>
-                                    <span class="text-gray-500 text-sm">@education.StartYear - @education.GraduationYear</span>
-                                </div>
-                                <div class="text-sm text-gray-600">@education.SchoolInstitution</div>
+            <div id="preview-education-section" class="mb-6 @(Model.Educations.Any() ? "" : "hidden")">
+                <h3 class="cv-section-title">Education</h3>
+                <div class="space-y-4" id="preview-education-list">
+                    @foreach (var education in Model.Educations)
+                    {
+                        <div class="preview-education-item">
+                            <div class="flex justify-between items-start">
+                                <h4 class="font-semibold text-gray-800">@education.Degree</h4>
+                                <span class="text-gray-500 text-sm">@education.StartYear - @education.GraduationYear</span>
                             </div>
-                        }
-                    </div>
+                            <div class="text-sm text-gray-600">@education.SchoolInstitution</div>
+                        </div>
+                    }
                 </div>
-            }
+            </div>
 
-            @if (Model.Experiences.Any())
-            {
-                <div class="mb-6">
-                    <h3 class="cv-section-title">Experience</h3>
-                    <div class="space-y-4">
-                        @foreach (var experience in Model.Experiences)
-                        {
-                            <div>
-                                <div class="flex justify-between items-start">
-                                    <h4 class="font-semibold text-gray-800">@experience.JobTitle</h4>
-                                    <span class="text-gray-500 text-sm">@experience.StartDate.ToString("yyyy-MM-dd") - @experience.EndDate?.ToString("yyyy-MM-dd")</span>
-                                </div>
-                                <div class="text-sm text-gray-600">@experience.EmployerOrganization</div>
-                                <p class="text-sm text-gray-700 mt-1">@experience.Description</p>
+            <div id="preview-experience-section" class="mb-6 @(Model.Experiences.Any() ? "" : "hidden")">
+                <h3 class="cv-section-title">Experience</h3>
+                <div class="space-y-4" id="preview-experience-list">
+                    @foreach (var experience in Model.Experiences)
+                    {
+                        <div class="preview-experience-item">
+                            <div class="flex justify-between items-start">
+                                <h4 class="font-semibold text-gray-800">@experience.JobTitle</h4>
+                                <span class="text-gray-500 text-sm">@experience.StartDate.ToString("yyyy-MM-dd") - @experience.EndDate?.ToString("yyyy-MM-dd")</span>
                             </div>
-                        }
-                    </div>
+                            <div class="text-sm text-gray-600">@experience.EmployerOrganization</div>
+                            <p class="text-sm text-gray-700 mt-1">@experience.Description</p>
+                        </div>
+                    }
                 </div>
-            }
+            </div>
 
-            @if (Model.Projects.Any())
-            {
-                <div class="mb-6">
-                    <h3 class="cv-section-title">Projects</h3>
-                    <div class="space-y-4">
-                        @foreach (var project in Model.Projects)
-                        {
-                            <div>
-                                <h4 class="font-semibold text-gray-800">@project.Title</h4>
-                                <a href="@project.ProjectLink" class="text-indigo-600 hover:underline text-sm" target="_blank">@project.ProjectLink</a>
-                                <p class="text-sm text-gray-700 mt-1">@project.Description</p>
-                            </div>
-                        }
-                    </div>
+            <div id="preview-projects-section" class="mb-6 @(Model.Projects.Any() ? "" : "hidden")">
+                <h3 class="cv-section-title">Projects</h3>
+                <div class="space-y-4" id="preview-projects-list">
+                    @foreach (var project in Model.Projects)
+                    {
+                        <div class="preview-project-item">
+                            <h4 class="font-semibold text-gray-800">@project.Title</h4>
+                            <a href="@project.ProjectLink" class="text-indigo-600 hover:underline text-sm" target="_blank">@project.ProjectLink</a>
+                            <p class="text-sm text-gray-700 mt-1">@project.Description</p>
+                        </div>
+                    }
                 </div>
-            }
+            </div>
 
-            @if (Model.Skills.Any())
-            {
-                <div class="mb-6">
-                    <h3 class="cv-section-title">Skills</h3>
-                    <div class="flex flex-wrap gap-2">
-                        @foreach (var skill in Model.Skills)
-                        {
-                            <span class="bg-gray-200 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full">@skill.Name</span>
-                        }
-                    </div>
+            <div id="preview-skills-section" class="mb-6 @(Model.Skills.Any() ? "" : "hidden")">
+                <h3 class="cv-section-title">Skills</h3>
+                <div class="flex flex-wrap gap-2" id="preview-skills-list">
+                    @foreach (var skill in Model.Skills)
+                    {
+                        <span class="bg-gray-200 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full preview-skill-item">@skill.Name</span>
+                    }
                 </div>
-            }
+            </div>
         </div>
     </div>
 </div>
@@ -374,18 +386,31 @@
         const sidebarLinks = document.querySelectorAll('.sidebar-link');
         const formSections = document.querySelectorAll('.cv-form');
 
+        // Function to set the active tab
+        function setActiveTab(targetId) {
+            sidebarLinks.forEach(item => item.classList.remove('active'));
+            formSections.forEach(section => section.classList.add('hidden'));
+
+            const activeLink = document.querySelector(`[data-target="${targetId}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+            const activeForm = document.getElementById(targetId);
+            if (activeForm) {
+                activeForm.classList.remove('hidden');
+            }
+        }
+
+        // Handle sidebar link clicks
         sidebarLinks.forEach(link => {
             link.addEventListener('click', function (e) {
                 e.preventDefault();
-                sidebarLinks.forEach(item => item.classList.remove('active'));
-                formSections.forEach(section => section.classList.add('hidden'));
-
-                this.classList.add('active');
                 const targetId = this.getAttribute('data-target');
-                document.getElementById(targetId).classList.remove('hidden');
+                setActiveTab(targetId);
             });
         });
 
+        // Live update for personal details form
         const liveUpdateFields = document.querySelectorAll('.live-update');
         liveUpdateFields.forEach(field => {
             field.addEventListener('input', function () {
@@ -401,5 +426,16 @@
                 }
             });
         });
+
+        // Get the initial active tab from the URL query string
+        const urlParams = new URLSearchParams(window.location.search);
+        const initialActiveTab = urlParams.get('activeTab');
+
+        // Set the active tab based on the query parameter or default to the first one
+        if (initialActiveTab) {
+            setActiveTab(initialActiveTab);
+        } else {
+            setActiveTab('personal-details-form');
+        }
     });
 </script>

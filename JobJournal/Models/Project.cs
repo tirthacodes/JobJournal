@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -22,9 +23,11 @@ namespace JobJournal.Models
         public string? Description { get; set; }
 
         [Required]
+        [ValidateNever]
         public string UserId { get; set; }
 
         [ForeignKey("UserId")]
+        [ValidateNever]
         public IdentityUser User { get; set; }
     }
 }
