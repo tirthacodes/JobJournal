@@ -42,7 +42,6 @@
 </style>
 
 <div class="container mx-auto p-4 md:p-8 grid grid-cols-12 gap-8 max-w-7xl">
-
     <div class="col-span-12 md:col-span-2">
         <h2 class="text-3xl font-bold text-gray-800 mb-6 hidden md:block">CV</h2>
         <nav class="bg-gray-100 p-4 rounded-lg shadow-sm border border-gray-200">
@@ -83,7 +82,6 @@
 
     <div class="col-span-12 md:col-span-4">
         <div class="flex-1 space-y-8 cv-form-container">
-            <!-- Personal Details Form -->
             <div id="personal-details-form" class="cv-form">
                 <h3 class="text-xl font-semibold text-gray-700 mb-4">Personal Details</h3>
                 <form asp-controller="Cv" asp-action="SaveCvProfile" method="post" class="space-y-4">
@@ -130,7 +128,6 @@
                 </form>
             </div>
 
-            <!-- Education Form -->
             <div id="education-form" class="cv-form hidden">
                 <h3 class="text-xl font-semibold text-gray-700 mb-4">Education</h3>
                 <div class="mt-4 space-y-4">
@@ -153,19 +150,19 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label asp-for="NewEducation.Degree" class="block text-sm font-medium text-gray-700">Degree / Field of Study</label>
-                            <input asp-for="NewEducation.Degree" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+                            <input asp-for="NewEducation.Degree" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm live-update" data-preview-target="preview-new-education-degree" />
                         </div>
                         <div>
                             <label asp-for="NewEducation.SchoolInstitution" class="block text-sm font-medium text-gray-700">School / Institution</label>
-                            <input asp-for="NewEducation.SchoolInstitution" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+                            <input asp-for="NewEducation.SchoolInstitution" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm live-update" data-preview-target="preview-new-school-institution" />
                         </div>
                         <div>
                             <label asp-for="NewEducation.StartYear" class="block text-sm font-medium text-gray-700">Start Year</label>
-                            <input asp-for="NewEducation.StartYear" type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+                            <input asp-for="NewEducation.StartYear" type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm live-update" data-preview-target="preview-new-start-year" />
                         </div>
                         <div>
                             <label asp-for="NewEducation.GraduationYear" class="block text-sm font-medium text-gray-700">Graduation Year</label>
-                            <input asp-for="NewEducation.GraduationYear" type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+                            <input asp-for="NewEducation.GraduationYear" type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm live-update" data-preview-target="preview-new-graduationn-year" />
                         </div>
                     </div>
                     <button type="submit" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
@@ -174,7 +171,6 @@
                 </form>
             </div>
 
-            <!-- Experience Form -->
             <div id="experience-form" class="cv-form hidden">
                 <h3 class="text-xl font-semibold text-gray-700 mb-4">Experience</h3>
                 <div class="mt-4 space-y-4">
@@ -197,24 +193,24 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label asp-for="NewExperience.JobTitle" class="block text-sm font-medium text-gray-700">Job Title</label>
-                            <input asp-for="NewExperience.JobTitle" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+                            <input asp-for="NewExperience.JobTitle" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm live-update" data-preview-target="preview-new-experience-jobtitle" />
                         </div>
                         <div>
                             <label asp-for="NewExperience.EmployerOrganization" class="block text-sm font-medium text-gray-700">Employer / Organization</label>
-                            <input asp-for="NewExperience.EmployerOrganization" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+                            <input asp-for="NewExperience.EmployerOrganization" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm live-update" data-preview-target="preview-new-experience-org" />
                         </div>
                         <div>
                             <label asp-for="NewExperience.StartDate" class="block text-sm font-medium text-gray-700">Start Date</label>
-                            <input asp-for="NewExperience.StartDate" type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+                            <input asp-for="NewExperience.StartDate" type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm live-update" data-preview-target="preview-new-experience-startdate" />
                         </div>
                         <div>
                             <label asp-for="NewExperience.EndDate" class="block text-sm font-medium text-gray-700">End Date</label>
-                            <input asp-for="NewExperience.EndDate" type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+                            <input asp-for="NewExperience.EndDate" type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm live-update" data-preview-target="preview-new-experience-enddate" />
                         </div>
                     </div>
                     <div>
                         <label asp-for="NewExperience.Description" class="block text-sm font-medium text-gray-700">Description</label>
-                        <textarea asp-for="NewExperience.Description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm"></textarea>
+                        <textarea asp-for="NewExperience.Description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm live-update" data-preview-target="preview-new-experience-desc"></textarea>
                     </div>
                     <button type="submit" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
                         Add Experience
@@ -222,7 +218,6 @@
                 </form>
             </div>
 
-            <!-- Projects Form -->
             <div id="projects-form" class="cv-form hidden">
                 <h3 class="text-xl font-semibold text-gray-700 mb-4">Projects</h3>
                 <div class="mt-4 space-y-4">
@@ -245,16 +240,16 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label asp-for="NewProject.Title" class="block text-sm font-medium text-gray-700">Title</label>
-                            <input asp-for="NewProject.Title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+                            <input asp-for="NewProject.Title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm live-update" data-preview-target="preview-new-project-title" />
                         </div>
                         <div>
                             <label asp-for="NewProject.ProjectLink" class="block text-sm font-medium text-gray-700">Project Link</label>
-                            <input asp-for="NewProject.ProjectLink" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm" />
+                            <input asp-for="NewProject.ProjectLink" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm live-update" data-preview-target="preview-new-project-link" />
                         </div>
                     </div>
                     <div>
                         <label asp-for="NewProject.Description" class="block text-sm font-medium text-gray-700">Description</label>
-                        <textarea asp-for="NewProject.Description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm"></textarea>
+                        <textarea asp-for="NewProject.Description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm live-update" data-preview-target="preview-new-project-desc"></textarea>
                     </div>
                     <button type="submit" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
                         Add Project
@@ -262,7 +257,6 @@
                 </form>
             </div>
 
-            <!-- Skills Form -->
             <div id="skills-form" class="cv-form hidden">
                 <h3 class="text-xl font-semibold text-gray-700 mb-4">Skills</h3>
                 <div class="mt-4 space-y-4">
@@ -284,7 +278,7 @@
                 </div>
                 <form asp-controller="Cv" asp-action="AddSkill" method="post" class="mt-4 flex gap-2">
                     <input type="hidden" name="activeTab" value="skills-form" />
-                    <input asp-for="NewSkill.Name" placeholder="Enter a new skill" class="flex-1 rounded-md border-gray-300 shadow-sm sm:text-sm" />
+                    <input asp-for="NewSkill.Name" placeholder="Enter a new skill" class="flex-1 rounded-md border-gray-300 shadow-sm sm:text-sm live-update" data-preview-target="preview-new-skill-name" />
                     <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
                         Add Skill
                     </button>
@@ -293,7 +287,6 @@
         </div>
     </div>
 
-    <!-- CV Preview Section -->
     <div class="col-span-12 md:col-span-6 flex-1">
         <div class="cv-preview">
             <div class="flex flex-col items-center mb-6 text-center">
@@ -308,7 +301,10 @@
                 <div class="text-gray-600 mt-2">
                     <span id="preview-address">@(Model.CvProfile?.Address ?? "Kathmandu - 10")</span>,
                     <span id="preview-city">@(Model.CvProfile?.City ?? "Kathmandu")</span>
-                    <span class="mx-2">|</span>
+                    @if (!string.IsNullOrEmpty(Model.CvProfile?.Phone))
+                    {
+                        <span class="mx-2">|</span>
+                    }
                     <span>Phone: <span id="preview-phone">@(Model.CvProfile?.Phone ?? "+977 98 xxx xx xxx")</span></span>
                 </div>
             </div>
@@ -321,7 +317,7 @@
                 </div>
             }
 
-            <div id="preview-education-section" class="mb-6 @(Model.Educations.Any() ? "" : "hidden")">
+            <div id="preview-education-section" class="mb-6 @(Model.Educations.Any() || (Model.NewEducation != null && (!string.IsNullOrEmpty(Model.NewEducation.Degree) || !string.IsNullOrEmpty(Model.NewEducation.SchoolInstitution) || Model.NewEducation.StartYear > 0 || Model.NewEducation.GraduationYear > 0)) ? "" : "hidden")">
                 <h3 class="cv-section-title">Education</h3>
                 <div class="space-y-4" id="preview-education-list">
                     @foreach (var education in Model.Educations)
@@ -329,11 +325,30 @@
                         <div class="preview-education-item">
                             <div class="flex justify-between items-start">
                                 <h4 class="font-semibold text-gray-800">@education.Degree</h4>
-                                <span class="text-gray-500 text-sm">@education.StartYear - @education.GraduationYear</span>
+                                <span class="text-gray-500 text-sm">
+                                    @education.StartYear
+                                    @if (education.GraduationYear > 0)
+                                    {
+                                        <span> - </span>
+                                    }
+                                    @education.GraduationYear
+                                </span>
                             </div>
                             <div class="text-sm text-gray-600">@education.SchoolInstitution</div>
                         </div>
                     }
+
+                    <div class="preview-education-item border-l-2 pl-2 border-gray-300">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-semibold text-gray-800" id="preview-new-education-degree"></h4>
+                            <span class="text-gray-500 text-sm">
+                                <span id="preview-new-start-year"></span>
+                                <span id="education-date-separator" class="hidden"> - </span>
+                                <span id="preview-new-graduationn-year"></span>
+                            </span>
+                        </div>
+                        <div class="text-sm text-gray-600" id="preview-new-school-institution"></div>
+                    </div>
                 </div>
             </div>
 
@@ -345,12 +360,31 @@
                         <div class="preview-experience-item">
                             <div class="flex justify-between items-start">
                                 <h4 class="font-semibold text-gray-800">@experience.JobTitle</h4>
-                                <span class="text-gray-500 text-sm">@experience.StartDate.ToString("yyyy-MM-dd") - @experience.EndDate?.ToString("yyyy-MM-dd")</span>
+                                <span class="text-gray-500 text-sm">
+                                    @experience.StartDate.ToString("yyyy-MM-dd")
+                                    @if (experience.EndDate.HasValue)
+                                    {
+                                        <span> - </span>
+                                    }
+                                    @experience.EndDate?.ToString("yyyy-MM-dd")
+                                </span>
                             </div>
                             <div class="text-sm text-gray-600">@experience.EmployerOrganization</div>
                             <p class="text-sm text-gray-700 mt-1">@experience.Description</p>
                         </div>
                     }
+                    <div class="preview-experience-item border-l-2 pl-2 border-gray-300">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-semibold text-gray-800" id="preview-new-experience-jobtitle"></h4>
+                            <span class="text-gray-500 text-sm">
+                                <span id="preview-new-experience-startdate"></span>
+                                <span id="experience-date-separator" class="hidden"> - </span>
+                                <span id="preview-new-experience-enddate"></span>
+                            </span>
+                        </div>
+                        <div class="text-sm text-gray-600" id="preview-new-experience-org"></div>
+                        <p class="text-sm text-gray-700 mt-1" id="preview-new-experience-desc"></p>
+                    </div>
                 </div>
             </div>
 
@@ -365,6 +399,11 @@
                             <p class="text-sm text-gray-700 mt-1">@project.Description</p>
                         </div>
                     }
+                    <div class="preview-project-item border-l-2 pl-2 border-gray-300">
+                        <h4 class="font-semibold text-gray-800" id="preview-new-project-title"></h4>
+                        <a href="#" class="text-indigo-600 hover:underline text-sm hidden" target="_blank" id="preview-new-project-link"></a>
+                        <p class="text-sm text-gray-700 mt-1" id="preview-new-project-desc"></p>
+                    </div>
                 </div>
             </div>
 
@@ -375,13 +414,12 @@
                     {
                         <span class="bg-gray-200 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full preview-skill-item">@skill.Name</span>
                     }
+                    <span class="bg-gray-200 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full border-l-2 pl-2 border-gray-300 preview-skill-item" id="preview-new-skill-name"></span>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
 
 
 <script>
@@ -392,12 +430,18 @@
 
         // Function to set the active tab
         function setActiveTab(targetId) {
-            sidebarLinks.forEach(item => item.classList.remove('active'));
+            sidebarLinks.forEach(item => {
+                item.classList.remove('active');
+                item.classList.add('border-l-transparent');
+                item.classList.remove('border-l-indigo-500');
+            });
             formSections.forEach(section => section.classList.add('hidden'));
 
             const activeLink = document.querySelector(`[data-target="${targetId}"]`);
             if (activeLink) {
                 activeLink.classList.add('active');
+                activeLink.classList.remove('border-l-transparent');
+                activeLink.classList.add('border-l-indigo-500');
             }
             const activeForm = document.getElementById(targetId);
             if (activeForm) {
@@ -481,27 +525,22 @@
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(newPageHtml, 'text/html');
 
-                    // Update CV lists
+                    const updateAndReplace = (formId, previewId) => {
+                        const newFormList = doc.getElementById(formId).querySelector('div.space-y-4, div.flex-wrap').innerHTML;
+                        document.getElementById(formId).querySelector('div.space-y-4, div.flex-wrap').innerHTML = newFormList;
+
+                        const newPreviewList = doc.getElementById(previewId).innerHTML;
+                        document.getElementById(previewId).innerHTML = newPreviewList;
+                    };
+
                     if (activeTab === 'education-form') {
-                        const newEducationList = doc.getElementById('preview-education-list').innerHTML;
-                        document.getElementById('preview-education-list').innerHTML = newEducationList;
-                        const newEducationFormList = doc.getElementById('education-form').querySelector('div.space-y-4').innerHTML;
-                        document.getElementById('education-form').querySelector('div.space-y-4').innerHTML = newEducationFormList;
+                        updateAndReplace('education-form', 'preview-education-list');
                     } else if (activeTab === 'experience-form') {
-                        const newExperienceList = doc.getElementById('preview-experience-list').innerHTML;
-                        document.getElementById('preview-experience-list').innerHTML = newExperienceList;
-                        const newExperienceFormList = doc.getElementById('experience-form').querySelector('div.space-y-4').innerHTML;
-                        document.getElementById('experience-form').querySelector('div.space-y-4').innerHTML = newExperienceFormList;
+                        updateAndReplace('experience-form', 'preview-experience-list');
                     } else if (activeTab === 'projects-form') {
-                        const newProjectsList = doc.getElementById('preview-projects-list').innerHTML;
-                        document.getElementById('preview-projects-list').innerHTML = newProjectsList;
-                        const newProjectsFormList = doc.getElementById('projects-form').querySelector('div.space-y-4').innerHTML;
-                        document.getElementById('projects-form').querySelector('div.space-y-4').innerHTML = newProjectsFormList;
+                        updateAndReplace('projects-form', 'preview-projects-list');
                     } else if (activeTab === 'skills-form') {
-                        const newSkillsList = doc.getElementById('preview-skills-list').innerHTML;
-                        document.getElementById('preview-skills-list').innerHTML = newSkillsList;
-                        const newSkillsFormList = doc.getElementById('skills-form').querySelector('div.space-y-4').innerHTML;
-                        document.getElementById('skills-form').querySelector('div.space-y-4').innerHTML = newSkillsFormList;
+                        updateAndReplace('skills-form', 'preview-skills-list');
                     }
 
                     // Update the CV preview section with the newly fetched data
@@ -517,11 +556,6 @@
                     setupFormListeners();
                     setActiveTab(activeTab);
 
-                    // Show the relevant preview sections if they were previously hidden
-                    document.getElementById('preview-education-section').classList.remove('hidden');
-                    document.getElementById('preview-experience-section').classList.remove('hidden');
-                    document.getElementById('preview-projects-section').classList.remove('hidden');
-                    document.getElementById('preview-skills-section').classList.remove('hidden');
                 } else {
                     console.error('Form submission failed:', response.statusText);
                 }
@@ -531,5 +565,76 @@
         }
 
         setupFormListeners();
+
+        // Live date separator logic for new entries
+        const educationStartYearInput = document.getElementById('NewEducation_StartYear');
+        const educationGraduationYearInput = document.getElementById('NewEducation_GraduationYear');
+        const educationSeparator = document.getElementById('education-date-separator');
+
+        const experienceStartDateInput = document.getElementById('NewExperience_StartDate');
+        const experienceEndDateInput = document.getElementById('NewExperience_EndDate');
+        const experienceSeparator = document.getElementById('experience-date-separator');
+
+        // Function to toggle the separator for Education
+        function toggleEducationSeparator() {
+            if (educationStartYearInput.value || educationGraduationYearInput.value) {
+                educationSeparator.classList.remove('hidden');
+            } else {
+                educationSeparator.classList.add('hidden');
+            }
+        }
+
+        // Function to toggle the separator for Experience
+        function toggleExperienceSeparator() {
+            if (experienceStartDateInput.value || experienceEndDateInput.value) {
+                experienceSeparator.classList.remove('hidden');
+            } else {
+                experienceSeparator.classList.add('hidden');
+            }
+        }
+
+        educationStartYearInput.addEventListener('input', toggleEducationSeparator);
+        educationGraduationYearInput.addEventListener('input', toggleEducationSeparator);
+        experienceStartDateInput.addEventListener('input', toggleExperienceSeparator);
+        experienceEndDateInput.addEventListener('input', toggleExperienceSeparator);
+
+        // Initial check on page load to set correct separator state
+        toggleEducationSeparator();
+        toggleExperienceSeparator();
     });
+
+    // Live update for project link
+    const newProjectLinkInput = document.getElementById('NewProject_ProjectLink');
+    const newProjectLinkPreview = document.getElementById('preview-new-project-link');
+    newProjectLinkInput.addEventListener('input', function () {
+        if (this.value) {
+            newProjectLinkPreview.textContent = this.value;
+            newProjectLinkPreview.href = this.value;
+            newProjectLinkPreview.classList.remove('hidden');
+        } else {
+            newProjectLinkPreview.textContent = '';
+            newProjectLinkPreview.href = '#';
+            newProjectLinkPreview.classList.add('hidden');
+        }
+    });
+
+    const newSkillInput = document.getElementById('NewSkill_Name');
+    const newSkillPreview = document.getElementById('preview-new-skill-name');
+
+    // Initially hide the preview element if the input is empty
+    if (newSkillInput && newSkillPreview) {
+        newSkillPreview.style.display = newSkillInput.value.trim() !== '' ? 'inline-block' : 'none';
+    }
+
+    newSkillInput.addEventListener('input', function () {
+        if (this.value.trim() !== '') {
+            newSkillPreview.textContent = this.value;
+            newSkillPreview.style.display = 'inline-block';
+        } else {
+            newSkillPreview.textContent = '';
+            newSkillPreview.style.display = 'none';
+        }
+    });
+
+
 </script>
