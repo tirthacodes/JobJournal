@@ -40,9 +40,8 @@ namespace JobJournal.Models
         [Display(Name = "Professional Summary")]
         public string? Summary { get; set; }
 
-        [StringLength(maximumLength: 250)]
-        [Display(Name = "Profile Photo URL")]
-        public string? PhotoUrl { get; set; }
+        [Display(Name = "Profile Photo")]
+        public byte[]? PhotoData { get; set; }
 
         [ValidateNever]
 

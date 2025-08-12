@@ -37,7 +37,7 @@ namespace JobJournal.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveCvProfile(CvProfile cvProfile)
+        public async Task<IActionResult> SaveCvProfile(CvProfile cvProfile, IFormFile? profilePhotoFile)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -46,6 +46,15 @@ namespace JobJournal.Controllers
                 cvProfile.UserId = userId;
 
                 var existingProfile = await _context.CvProfiles.FirstOrDefaultAsync(p => p.UserId == userId);
+
+                if (profilePhotoFile != null && profilePhotoFile.Length > 0)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await profilePhotoFile.CopyToAsync(memoryStream);
+                        cvProfile.PhotoData = memoryStream.ToArray();
+                    }
+                }
 
                 if (existingProfile == null)
                 {
@@ -60,7 +69,12 @@ namespace JobJournal.Controllers
                     existingProfile.City = cvProfile.City;
                     existingProfile.Phone = cvProfile.Phone;
                     existingProfile.Summary = cvProfile.Summary;
-                    existingProfile.PhotoUrl = cvProfile.PhotoUrl;
+
+                    if (profilePhotoFile != null && profilePhotoFile.Length > 0)
+                    {
+                        existingProfile.PhotoData = cvProfile.PhotoData;
+                    }
+
                     _context.CvProfiles.Update(existingProfile);
                 }
 
@@ -69,6 +83,22 @@ namespace JobJournal.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetProfilePhoto(string userId)
+        {
+            var cvProfile = await _context.CvProfiles.FirstOrDefaultAsync(p => p.UserId == userId);
+
+            if (cvProfile?.PhotoData == null)
+            {
+                return Redirect("https://placehold.co/128x128/9CA3AF/FFFFFF?text=Photo");
+            }
+
+            
+            string contentType = "image/jpeg";
+            return new FileContentResult(cvProfile.PhotoData, contentType);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> AddEducation(Education newEducation)
